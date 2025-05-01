@@ -59,62 +59,32 @@
       text-align: left;
       opacity: 0;
       animation: fadeIn 2s ease forwards 1s;
+      display: flex;
+      align-items: center;
+      gap: 20px;
     }
     .overlay-text img {
       height: 60px;
     }
     .tagline {
       font-size: 16px;
-      margin-top: 10px;
-      opacity: 0;
+      color: black;
       white-space: nowrap;
-      transition: opacity 0.5s;
-      color: white;
     }
-    .overlay-text:hover .tagline {
-      opacity: 1;
-    }
-    .content-sections {
+    .menu-options {
       display: none;
       position: absolute;
-      top: 60px;
-      bottom: 60px;
-      right: 0;
-      width: 50%;
+      top: calc(50% + 50px);
+      left: calc(60px + 50px);
+      z-index: 3;
       display: flex;
       flex-direction: column;
-      z-index: 3;
-      background-color: rgba(255, 255, 255, 0.9);
-      color: black;
-      font-size: 18px;
-      border-left: 1px solid #ddd;
+      gap: 20px;
+      font-size: 20px;
+      color: white;
     }
-    .section {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      border-bottom: 1px solid #ddd;
-      transition: background-color 0.3s;
-    }
-    .section:last-child {
-      border-bottom: none;
-    }
-    .section:hover {
-      background-color: #f5f5f5;
-    }
-    .details {
-      position: absolute;
-      bottom: 20px;
-      text-align: center;
-      font-size: 14px;
-      opacity: 0;
-      transition: opacity 0.3s;
-      padding: 0 20px;
-    }
-    .section:hover .details {
-      opacity: 1;
+    .menu-options div {
+      cursor: default;
     }
     @keyframes fadeIn {
       to {
@@ -135,20 +105,10 @@
       <img src="logo.png" alt="GUICHAR LPAM Logo">
       <div class="tagline">Advisory & Allocation across Listed, Private and Alternative Markets</div>
     </div>
-  </div>
-
-  <div class="content-sections" id="market-sections" style="display: none;">
-    <div class="section">
-      Listed Markets
-      <div class="details">→ Actions, obligations, fonds datés, ETF, structured products</div>
-    </div>
-    <div class="section">
-      Private Markets
-      <div class="details">→ Private equity, venture capital, club deals</div>
-    </div>
-    <div class="section">
-      Alternative Markets
-      <div class="details">→ SCPI, crowdlending, crypto sous contrôle, investissements non conventionnels</div>
+    <div class="menu-options" id="menuOptions">
+      <div>Listed Markets</div>
+      <div>Private Markets</div>
+      <div>Alternative Markets</div>
     </div>
   </div>
 
@@ -156,10 +116,10 @@
 
   <script>
     const titleText = document.getElementById('title-text');
-    const marketSections = document.getElementById('market-sections');
+    const menuOptions = document.getElementById('menuOptions');
 
     titleText.addEventListener('click', () => {
-      marketSections.style.display = 'flex';
+      menuOptions.style.display = 'flex';
     });
   </script>
 </body>
