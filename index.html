@@ -78,36 +78,43 @@
       position: absolute;
       top: calc(50% + 110px);
       left: 60px;
-      z-index: 3;
+      z-index: 4;
       flex-direction: column;
       gap: 10px;
       font-size: 14px;
       color: black;
-      animation: growLines 1s ease forwards;
-      opacity: 0;
     }
     .menu-options.visible {
       display: flex;
-      opacity: 1;
     }
     .menu-options div {
       cursor: default;
     }
-
+    svg.lines {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      pointer-events: none;
+    }
+    path.line-path {
+      stroke: black;
+      stroke-width: 1.5;
+      fill: none;
+      stroke-dasharray: 200;
+      stroke-dashoffset: 200;
+      animation: drawLine 1s forwards;
+    }
     @keyframes fadeIn {
       to {
         opacity: 1;
       }
     }
-
-    @keyframes growLines {
-      0% {
-        opacity: 0;
-        transform: scaleY(0.5) translateY(-20px);
-      }
-      100% {
-        opacity: 1;
-        transform: scaleY(1) translateY(0);
+    @keyframes drawLine {
+      to {
+        stroke-dashoffset: 0;
       }
     }
   </style>
@@ -124,6 +131,7 @@
       <img src="logo.png" alt="GUICHAR LPAM Logo">
       <div class="tagline">Advisory & Allocation across Listed, Private and Alternative Markets</div>
     </div>
+    <svg class="lines" id="linesSvg"></svg>
     <div class="menu-options" id="menuOptions">
       <div>Listed Markets</div>
       <div>Private Markets</div>
@@ -136,9 +144,26 @@
   <script>
     const titleText = document.getElementById('title-text');
     const menuOptions = document.getElementById('menuOptions');
+    const linesSvg = document.getElementById('linesSvg');
 
     titleText.addEventListener('click', () => {
       menuOptions.classList.add('visible');
+
+      const rect = titleText.getBoundingClientRect();
+      const startX = rect.left + rect.width / 2;
+      const startY = rect.top + rect.height;
+
+      const targetRects = menuOptions.querySelectorAll('div');
+      targetRects.forEach((el, i) => {
+        const target = el.getBoundingClientRect();
+        const endX = target.left;
+        const endY = target.top + target.height / 2;
+
+        const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("class", "line-path");
+        path.setAttribute("d", `M ${startX},${startY} C ${startX},${startY + 30} ${endX},${endY - 30} ${endX},${endY}`);
+        linesSvg.appendChild(path);
+      });
     });
   </script>
 </body>
