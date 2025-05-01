@@ -75,13 +75,15 @@
       position: absolute;
       top: 60px;
       bottom: 60px;
-      left: 0;
       right: 0;
+      width: 50%;
       display: flex;
+      flex-direction: column;
       z-index: 2;
       background-color: white;
       color: black;
       font-size: 18px;
+      border-left: 1px solid #ddd;
     }
     .section {
       flex: 1;
@@ -89,11 +91,11 @@
       justify-content: center;
       align-items: center;
       position: relative;
-      border-right: 1px solid #ddd;
+      border-bottom: 1px solid #ddd;
       transition: background-color 0.3s;
     }
     .section:last-child {
-      border-right: none;
+      border-bottom: none;
     }
     .section:hover {
       background-color: #f5f5f5;
@@ -131,7 +133,7 @@
     </div>
   </div>
 
-  <div class="content-sections" id="market-sections">
+  <div class="content-sections" id="market-sections" style="display: none;">
     <div class="section">
       Listed Markets
       <div class="details">→ Actions, obligations, fonds datés, ETF, structured products</div>
