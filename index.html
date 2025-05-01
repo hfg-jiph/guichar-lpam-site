@@ -78,7 +78,7 @@
       position: absolute;
       top: 0;
       left: 50%;
-      transform: translateX(-100px); /* half of 200px */
+      transform: translateX(-100px);
       width: 200px;
       height: 0;
       background-color: rgba(255, 255, 255, 0.6);
@@ -93,7 +93,7 @@
       position: absolute;
       top: calc(50% + 100px);
       left: 50%;
-      transform: translateX(-80px); /* align left with 20px padding inside 200px block */
+      transform: translateX(-80px);
       z-index: 5;
       flex-direction: column;
       gap: 10px;
@@ -107,6 +107,15 @@
     .menu-options.visible {
       display: flex;
       animation: growFromLogo 0.6s ease forwards;
+    }
+    .menu-options div::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: black;
+      margin-right: 10px;
+      vertical-align: middle;
     }
     @keyframes growFromLogo {
       0% {
