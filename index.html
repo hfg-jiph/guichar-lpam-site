@@ -54,13 +54,14 @@
       top: 50%;
       left: 60px;
       transform: translateY(-50%);
-      color: white;
       z-index: 2;
-      font-size: 36px;
-      font-weight: bold;
+      cursor: pointer;
+      text-align: left;
       opacity: 0;
       animation: fadeIn 2s ease forwards 1s;
-      cursor: pointer;
+    }
+    .overlay-text img {
+      height: 60px;
     }
     .tagline {
       font-size: 16px;
@@ -68,6 +69,7 @@
       opacity: 0;
       white-space: nowrap;
       transition: opacity 0.5s;
+      color: white;
     }
     .overlay-text:hover .tagline {
       opacity: 1;
@@ -130,12 +132,12 @@
       Your browser does not support the video tag.
     </video>
     <div class="overlay-text" id="title-text">
-      GUICHAR LPAM
+      <img src="logo.png" alt="GUICHAR LPAM Logo">
       <div class="tagline">Advisory & Allocation across Listed, Private and Alternative Markets</div>
     </div>
   </div>
 
-  <div class="content-sections" id="market-sections">
+  <div class="content-sections" id="market-sections" style="display: none;">
     <div class="section">
       Listed Markets
       <div class="details">→ Actions, obligations, fonds datés, ETF, structured products</div>
