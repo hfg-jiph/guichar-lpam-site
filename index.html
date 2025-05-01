@@ -18,35 +18,23 @@
       overflow: hidden;
       position: relative;
     }
-    header {
-      text-align: center;
-      padding-top: 30px;
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 2px;
-      color: black;
+    .bar-top,
+    .bar-bottom {
+      position: absolute;
+      height: 60px;
+      width: 100%;
+      background-color: black;
+      z-index: 3;
     }
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 40px;
-      padding: 20px 0;
-      font-size: 16px;
-      border-bottom: 1px solid #ccc;
+    .bar-top {
+      top: 0;
     }
-    nav a {
-      color: black;
-      text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      transition: color 0.3s;
-    }
-    nav a:hover {
-      color: #888;
+    .bar-bottom {
+      bottom: 0;
     }
     .animation-section {
       position: absolute;
-      top: 120px;
+      top: 60px;
       bottom: 60px;
       left: 0;
       right: 0;
@@ -54,41 +42,123 @@
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      z-index: 1;
     }
     .animation-section video {
       width: 100%;
       height: 100%;
       object-fit: cover;
     }
-    footer {
+    .overlay-text {
       position: absolute;
-      bottom: 0;
-      width: 100%;
+      color: white;
+      z-index: 2;
+      font-size: 36px;
+      font-weight: bold;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards 1s;
+      cursor: pointer;
+      text-align: center;
+    }
+    .tagline {
+      font-size: 16px;
+      margin-top: 10px;
+      opacity: 0;
+      white-space: nowrap;
+      transition: opacity 0.5s;
+    }
+    .overlay-text:hover .tagline {
+      opacity: 1;
+    }
+    .content-sections {
+      display: none;
+      position: absolute;
+      top: 60px;
+      bottom: 60px;
+      left: 0;
+      right: 0;
+      display: flex;
+      z-index: 2;
       background-color: white;
       color: black;
+      font-size: 18px;
+    }
+    .section {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      border-right: 1px solid #ddd;
+      transition: background-color 0.3s;
+    }
+    .section:last-child {
+      border-right: none;
+    }
+    .section:hover {
+      background-color: #f5f5f5;
+    }
+    .details {
+      position: absolute;
+      bottom: 20px;
       text-align: center;
-      padding: 20px;
       font-size: 14px;
-      font-family: Georgia, serif;
-      border-top: 1px solid #ccc;
+      opacity: 0;
+      transition: opacity 0.3s;
+      padding: 0 20px;
+    }
+    .section:hover .details {
+      opacity: 1;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
-  <header>GUICHAR LPAM</header>
-  <nav>
-    <a href="#">Listed Market</a>
-    <a href="#">Private Market</a>
-    <a href="#">Alternative Market</a>
-  </nav>
-  <div class="animation-section">
-    <video autoplay muted loop playsinline>
+  <div class="bar-top"></div>
+
+  <div class="animation-section" id="video-section">
+    <video autoplay muted loop playsinline id="bg-video">
       <source src="lake-birds2.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    <div class="overlay-text" id="title-text">
+      GUICHAR LPAM
+      <div class="tagline">Advisory & Allocation across Listed, Private and Alternative Markets</div>
+    </div>
   </div>
-  <footer>
-    &copy; 2025 GUICHAR LPAM | Paris, France | Patrimonium Custodire, Augere et Tradere
-  </footer>
+
+  <div class="content-sections" id="market-sections">
+    <div class="section">
+      Listed Markets
+      <div class="details">→ Actions, obligations, fonds datés, ETF, structured products</div>
+    </div>
+    <div class="section">
+      Private Markets
+      <div class="details">→ Private equity, venture capital, club deals</div>
+    </div>
+    <div class="section">
+      Alternative Markets
+      <div class="details">→ SCPI, crowdlending, crypto sous contrôle, investissements non conventionnels</div>
+    </div>
+  </div>
+
+  <div class="bar-bottom"></div>
+
+  <script>
+    const titleText = document.getElementById('title-text');
+    const videoSection = document.getElementById('video-section');
+    const marketSections = document.getElementById('market-sections');
+    const video = document.getElementById('bg-video');
+
+    titleText.addEventListener('click', () => {
+      videoSection.style.display = 'none';
+      marketSections.style.display = 'flex';
+      video.pause();
+    });
+  </script>
 </body>
 </html>
