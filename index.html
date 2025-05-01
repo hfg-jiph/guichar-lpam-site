@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>GUICHAR LPAM</title>
   <style>
     * {
@@ -49,70 +49,81 @@
       top: 0;
       left: 0;
     }
-    .overlay-text {
+    .center-content {
       position: absolute;
       top: 50%;
-      left: 60px;
-      transform: translateY(-50%);
-      z-index: 2;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 3;
       cursor: pointer;
-      text-align: left;
-      opacity: 0;
-      animation: fadeIn 2s ease forwards 1s;
     }
-    .overlay-text img {
-      height: 60px;
+    .center-content img {
+      height: 80px;
     }
     .tagline {
       font-size: 16px;
       color: black;
-      white-space: nowrap;
       opacity: 0;
+      margin-top: 10px;
       transition: opacity 0.5s;
+      text-align: center;
     }
-    .overlay-text:hover .tagline {
+    .center-content:hover .tagline {
       opacity: 1;
+    }
+    .backdrop {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 0;
+      height: 0;
+      background-color: rgba(255, 255, 255, 0.6);
+      z-index: 2;
+      transition: height 0.8s ease;
+      border-radius: 8px;
+    }
+    .backdrop.expand {
+      width: 300px;
+      height: 200px;
     }
     .menu-options {
       display: none;
       position: absolute;
-      top: calc(50% + 110px);
-      left: 60px;
+      top: calc(50% + 100px);
+      left: 50%;
+      transform: translateX(-50%);
       z-index: 4;
       flex-direction: column;
       gap: 10px;
       font-size: 14px;
       color: black;
-      background-color: rgba(255, 255, 255, 0.85);
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
     }
     .menu-options.visible {
       display: flex;
-    }
-    .menu-options div {
-      cursor: default;
-    }
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-      }
     }
   </style>
 </head>
 <body>
   <div class="bar-top"></div>
 
-  <div class="animation-section" id="video-section">
-    <video autoplay muted loop playsinline id="bg-video">
+  <div class="animation-section">
+    <video autoplay muted loop playsinline>
       <source src="lake-birds2.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <div class="overlay-text" id="title-text">
+
+    <div class="backdrop" id="backdrop"></div>
+
+    <div class="center-content" id="logoBlock">
       <img src="logo.png" alt="GUICHAR LPAM Logo">
       <div class="tagline">Advisory & Allocation across Listed, Private and Alternative Markets</div>
     </div>
+
     <div class="menu-options" id="menuOptions">
       <div>Listed Markets</div>
       <div>Private Markets</div>
@@ -123,11 +134,15 @@
   <div class="bar-bottom"></div>
 
   <script>
-    const titleText = document.getElementById('title-text');
+    const logoBlock = document.getElementById('logoBlock');
     const menuOptions = document.getElementById('menuOptions');
+    const backdrop = document.getElementById('backdrop');
 
-    titleText.addEventListener('click', () => {
-      menuOptions.classList.add('visible');
+    logoBlock.addEventListener('click', () => {
+      backdrop.classList.add('expand');
+      setTimeout(() => {
+        menuOptions.classList.add('visible');
+      }, 600);
     });
   </script>
 </body>
