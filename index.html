@@ -78,8 +78,8 @@
       position: absolute;
       top: 0;
       left: 50%;
-      transform: translateX(-50%);
-      width: 80px; /* initial width same as logo */
+      transform: translateX(-40px); /* half of logo width */
+      width: 80px;
       height: 0;
       background-color: rgba(255, 255, 255, 0.6);
       z-index: 2;
@@ -100,9 +100,23 @@
       font-size: 14px;
       color: black;
       text-align: center;
+      opacity: 0;
+      transform-origin: top center;
+      animation: none;
     }
     .menu-options.visible {
       display: flex;
+      animation: growFromLogo 0.6s ease forwards;
+    }
+    @keyframes growFromLogo {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) scaleY(0.2);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) scaleY(1);
+      }
     }
   </style>
 </head>
