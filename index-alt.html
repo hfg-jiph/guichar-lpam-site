@@ -15,34 +15,39 @@
       width: 100%;
       overflow: hidden;
       font-family: Arial, sans-serif;
-      background-color: black;
+      background-color: white;
+      position: relative;
     }
-    video {
-      position: fixed;
+    .animation-section {
+      position: absolute;
       top: 0;
+      bottom: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -1;
+      right: 0;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      overflow: hidden;
+      padding-left: 60px;
+      z-index: 1;
     }
-    .overlay {
+    .animation-section video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       position: absolute;
       top: 0;
       left: 0;
-      height: 100%;
-      width: 100%;
-      display: flex;
-      align-items: center;
-      padding-left: 60px;
-      color: white;
+      z-index: 0;
     }
-    .brand {
+    .overlay-text {
+      position: relative;
+      color: white;
+      z-index: 2;
       font-size: 36px;
       font-weight: bold;
       opacity: 0;
       animation: fadeIn 2s ease forwards 1s;
-      position: relative;
       cursor: default;
     }
     .tagline {
@@ -50,12 +55,9 @@
       margin-top: 10px;
       opacity: 0;
       white-space: nowrap;
-      position: absolute;
-      top: 40px;
-      left: 0;
       transition: opacity 0.5s;
     }
-    .brand:hover .tagline {
+    .overlay-text:hover .tagline {
       opacity: 1;
     }
     @keyframes fadeIn {
@@ -66,13 +68,12 @@
   </style>
 </head>
 <body>
-  <video autoplay muted loop playsinline>
-    <source src="lake-birds2.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-
-  <div class="overlay">
-    <div class="brand">
+  <div class="animation-section">
+    <video autoplay muted loop playsinline>
+      <source src="lake-birds2.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="overlay-text">
       GUICHAR LPAM
       <div class="tagline">Advisory & Allocation across Listed, Private and Alternative Markets</div>
     </div>
