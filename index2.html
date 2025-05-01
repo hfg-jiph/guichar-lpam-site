@@ -1,47 +1,82 @@
-export default function Home() {
-  return (
-    <main className="min-h-screen bg-neutral-100 text-neutral-900 px-6 py-12 font-serif">
-      <header className="mb-20">
-        <h1 className="text-4xl font-bold tracking-wide">GUICHAR LPAM</h1>
-        <p className="mt-2 text-lg italic text-neutral-600">
-          Advisory & Allocation across Listed, Private and Alternative Markets
-        </p>
-      </header>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GUICHAR LPAM – Fullscreen Version</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: Arial, sans-serif;
+      background-color: black;
+      position: relative;
+    }
+    video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+    }
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      padding-left: 60px;
+      color: white;
+    }
+    .brand {
+      font-size: 36px;
+      font-weight: bold;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards 1s;
+      position: relative;
+      cursor: default;
+    }
+    .tagline {
+      font-size: 16px;
+      font-weight: normal;
+      margin-top: 10px;
+      opacity: 0;
+      position: absolute;
+      top: 40px;
+      left: 0;
+      transition: opacity 0.5s;
+    }
+    .brand:hover .tagline {
+      opacity: 1;
+    }
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <video autoplay muted loop playsinline>
+    <source src="lake-birds.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 
-      <section className="mb-16 max-w-3xl">
-        <h2 className="text-2xl font-semibold mb-4">Notre approche</h2>
-        <p className="mb-4">
-          GUICHAR LPAM is an independent advisory structure supporting the strategic oversight and asset allocation of a private investment holding.
-          Our approach combines long-term discipline, governance, and independence.
-        </p>
-        <p>
-          We operate with confidentiality, rigour, and full alignment of interest, without managing third-party assets or engaging in any regulated financial services.
-        </p>
-      </section>
-
-      <section className="mb-16 max-w-3xl">
-        <h2 className="text-2xl font-semibold mb-4">Mandat</h2>
-        <ul className="list-disc list-inside space-y-2">
-          <li>Exclusive support to a private investment holding</li>
-          <li>Focus on governance, strategic allocation and long-term portfolio structure</li>
-          <li>No fund management, no public advisory, no regulated financial activity</li>
-        </ul>
-      </section>
-
-      <section className="mb-20 max-w-3xl">
-        <h2 className="text-2xl font-semibold mb-4">Domaines couverts</h2>
-        <ul className="list-disc list-inside space-y-2">
-          <li><strong>Listed Markets:</strong> Equities, bonds, structured products</li>
-          <li><strong>Private Markets:</strong> Private equity, venture capital, direct investments</li>
-          <li><strong>Alternative Markets:</strong> SCPI, crowdlending, diversified alternative assets</li>
-        </ul>
-      </section>
-
-      <footer className="text-sm text-neutral-500 border-t pt-6">
-        <p className="mb-2">Contact: <a href="mailto:contact@guichar.com" className="underline">contact@guichar.com</a></p>
-        <p>© GUICHAR LPAM – All rights reserved</p>
-        <p>Independent structure – Not regulated by AMF – No third-party fund management</p>
-      </footer>
-    </main>
-  );
-}
+  <div class="overlay">
+    <div class="brand">
+      GUICHAR LPAM
+      <div class="tagline">Advisory & Allocation across Listed, Private and Alternative Markets</div>
+    </div>
+  </div>
+</body>
+</html>
