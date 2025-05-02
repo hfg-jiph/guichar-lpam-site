@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ultima Arx, Consilium Sapientis</title>
+  <title>· GUICHAR LPAM ·</title>
 
-  <!-- Favicon setup -->
+  <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
-  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 
   <style>
     * {
@@ -30,7 +30,7 @@
       position: absolute;
       height: 60px;
       width: 100%;
-      background-color: #8AD;
+      background-color: black;
       z-index: 3;
     }
     .bar-top {
@@ -38,11 +38,20 @@
     }
     .bar-bottom {
       bottom: 0;
-      color: white;
       display: flex;
       justify-content: center;
       align-items: center;
+      color: white;
       font-size: 14px;
+      animation: slideUp 1.5s ease-out forwards;
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    @keyframes slideUp {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
     }
     .animation-section {
       position: absolute;
@@ -71,6 +80,18 @@
       align-items: center;
       z-index: 4;
       cursor: pointer;
+      opacity: 0;
+      animation: fadeInLogo 2s ease-out 1s forwards;
+    }
+    @keyframes fadeInLogo {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -60%) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
     }
     .center-content img {
       height: 80px;
@@ -78,7 +99,7 @@
     .tagline {
       font-size: 14px;
       font-weight: bold;
-      color: #8AD;
+      color: black;
       opacity: 0;
       margin-top: 10px;
       transition: opacity 0.5s;
@@ -111,7 +132,7 @@
       flex-direction: column;
       gap: 10px;
       font-size: 14px;
-      color: #8AD;
+      color: black;
       text-align: left;
       opacity: 0;
       transform-origin: top center;
@@ -126,7 +147,7 @@
       display: inline-block;
       width: 6px;
       height: 6px;
-      background-color: #8AD;
+      background-color: black;
       margin-right: 10px;
       vertical-align: middle;
     }
@@ -141,7 +162,20 @@
       }
     }
   </style>
+
+  <!-- Title scroll effect -->
+  <script>
+    let titleText = " · Ultima Arx, Consilium Sapientis · ";
+    let position = 0;
+    function scrollTitle() {
+      document.title = titleText.substring(position) + titleText.substring(0, position);
+      position = (position + 1) % titleText.length;
+      setTimeout(scrollTitle, 200);
+    }
+    scrollTitle();
+  </script>
 </head>
+
 <body>
   <div class="bar-top"></div>
 
@@ -180,14 +214,6 @@
         menuOptions.classList.add('visible');
       }, 600);
     });
-
-    // Animated title signature
-    const titles = ["Ultima Arx", "Consilium Sapientis", "GUICHAR LPAM"];
-    let titleIndex = 0;
-    setInterval(() => {
-      document.title = titles[titleIndex];
-      titleIndex = (titleIndex + 1) % titles.length;
-    }, 2000);
   </script>
 </body>
 </html>
