@@ -6,10 +6,10 @@
   <title>:: GUICHAR LPAM ::</title>
 
   <!-- Favicon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png">
-  <link rel="shortcut icon" href="/favicon_io/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+  <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
 
   <style>
     * {
@@ -28,10 +28,11 @@
     .bar-top,
     .bar-bottom {
       position: absolute;
-      height: 60px;
       width: 100%;
       background-color: black;
       z-index: 3;
+      height: 60px;
+      transition: height 0.3s ease;
     }
     .bar-top {
       top: 0;
@@ -40,11 +41,12 @@
       bottom: 0;
     }
     .footer-text {
-      position: absolute;
+      position: fixed;
       right: 20px;
       bottom: 10px;
       color: white;
       font-size: 10px;
+      z-index: 6;
     }
     .animation-section {
       position: absolute;
@@ -62,6 +64,7 @@
       position: absolute;
       top: 0;
       left: 0;
+      pointer-events: none;
     }
     .center-content {
       position: absolute;
@@ -73,14 +76,16 @@
       align-items: center;
       z-index: 4;
       cursor: pointer;
-      animation: logoAppear 2s ease-out forwards;
+      opacity: 0;
+      animation: logoPulse 2s ease-out 1s forwards;
     }
-    @keyframes logoAppear {
+    @keyframes logoPulse {
       0% {
         opacity: 0;
-        transform: translate(-50%, -60%) scale(0.9);
+        transform: translate(-50%, -60%) scale(0.8);
       }
       50% {
+        opacity: 1;
         transform: translate(-50%, -50%) scale(1.5);
       }
       100% {
@@ -90,10 +95,22 @@
     }
     .center-content img {
       height: 80px;
-      transition: all 0.3s ease-in-out;
+      transition: opacity 0.3s;
     }
-    .center-content img:hover:not(.locked) {
+    .center-content.hover-effect:hover img:not(.locked) {
       content: url('logo_purple.png');
+    }
+    .tagline {
+      font-size: 14px;
+      font-weight: bold;
+      color: #66023C;
+      opacity: 0;
+      margin-top: 10px;
+      transition: opacity 0.5s;
+      text-align: center;
+    }
+    .center-content:hover .tagline.show {
+      opacity: 1;
     }
     .backdrop {
       position: absolute;
@@ -102,86 +119,91 @@
       transform: translateX(-100px);
       width: 200px;
       height: 0;
-      background-color: #66023C;
+      background-color: rgba(102, 2, 60, 0.6);
       z-index: 2;
-      transition: height 1.5s ease;
+      transition: height 0.8s ease;
     }
     .backdrop.expand {
       height: 100%;
     }
-    .lpam-container {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 20px;
-      margin-top: 40px;
-      font-weight: bold;
-      font-size: 18px;
-      color: black;
-      z-index: 5;
-    }
-    .lpam-letter {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .progress-bar {
-      width: 60px;
-      height: 4px;
-      background-color: #ccc;
-      position: relative;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      background-color: #66023C;
-      animation: fillBar 2.5s forwards;
-    }
-    @keyframes fillBar {
-      to {
-        width: 100%;
-      }
-    }
-    .categories {
+    .menu-options {
       display: none;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 18px;
-      color: black;
-      font-weight: bold;
-      z-index: 6;
-      opacity: 0;
-      animation: fadeIn 1s ease forwards;
-      animation-delay: 2.5s;
       position: absolute;
       top: 60%;
       left: 50%;
-      transform: translateX(-50%);
+      transform: translate(-80px, -50%);
+      z-index: 5;
+      flex-direction: column;
+      gap: 10px;
+      font-size: 14px;
+      color: black;
+      text-align: left;
+      opacity: 0;
+      transform-origin: top center;
+      animation: none;
     }
-    @keyframes fadeIn {
-      to {
+    .menu-options.visible {
+      display: flex;
+      animation: growFromLogo 0.6s ease forwards;
+    }
+    .menu-options a {
+      color: black;
+      text-decoration: none;
+      transition: transform 0.3s, color 0.3s;
+    }
+    .menu-options a:hover {
+      transform: translateX(5px);
+      color: #66023C;
+    }
+    .menu-options a::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      background-color: black;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+    @keyframes growFromLogo {
+      0% {
+        opacity: 0;
+        transform: translate(-80px, -50%) scaleY(0.2);
+      }
+      100% {
         opacity: 1;
+        transform: translate(-80px, -50%) scaleY(1);
       }
     }
-
-    /* Responsive adjustments */
-    @media (max-width: 480px) {
-      .lpam-container {
-        align-items: center;
-      }
-      .categories {
-        align-items: center;
-        font-size: 16px;
-      }
+    @media (max-width: 768px) and (orientation: landscape) {
       .bar-top,
       .bar-bottom {
         height: 20px;
       }
+      .animation-section {
+        top: 20px;
+        bottom: 20px;
+      }
+    }
+    @media (max-width: 480px) {
+      .menu-options {
+        top: 60%;
+        font-size: 16px;
+        left: 50%;
+        transform: translate(-80px, -50%);
+        text-align: left;
+        align-items: flex-start;
+      }
       .footer-text {
-        font-size: 8px;
-        right: 5px;
+        font-size: 10px;
+        right: 10px;
+        bottom: 5px;
+      }
+      .center-content img {
+        height: 60px;
+      }
+      .tagline {
+        font-size: 13px;
+        padding: 0 10px;
       }
     }
   </style>
@@ -201,28 +223,22 @@
   <div class="bar-top"></div>
 
   <div class="animation-section">
-    <video autoplay muted loop playsinline preload="auto" id="bg-video">
+    <video autoplay muted loop playsinline preload="auto" id="backgroundVideo">
       <source src="lake-birds2.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
 
     <div class="backdrop" id="backdrop"></div>
 
-    <div class="center-content" id="logoBlock">
-      <img src="logo.png" alt="GUICHAR LPAM Logo" id="mainLogo">
+    <div class="center-content hover-effect" id="logoBlock">
+      <img src="logo.png" alt="GUICHAR LPAM Logo">
+      <div class="tagline show" id="tagline">Advisory & Allocation across Listed, Private and Alternative Markets</div>
     </div>
 
-    <div class="lpam-container" id="lpamContainer">
-      <div class="lpam-letter"><span>L</span><div class="progress-bar"><div class="progress-fill"></div></div></div>
-      <div class="lpam-letter"><span>P</span><div class="progress-bar"><div class="progress-fill"></div></div></div>
-      <div class="lpam-letter"><span>A</span><div class="progress-bar"><div class="progress-fill"></div></div></div>
-      <div class="lpam-letter"><span style="margin-left: 100px;">M</span><div class="progress-bar"><div class="progress-fill"></div></div></div>
-    </div>
-
-    <div class="categories" id="categories">
-      <div>Listed</div>
-      <div>Private</div>
-      <div>& Alternative Markets</div>
+    <div class="menu-options" id="menuOptions">
+      <a href="#">Listed Markets</a>
+      <a href="#">Private Markets</a>
+      <a href="#">Alternative Markets</a>
     </div>
   </div>
 
@@ -231,26 +247,24 @@
 
   <script>
     const logoBlock = document.getElementById('logoBlock');
+    const menuOptions = document.getElementById('menuOptions');
     const backdrop = document.getElementById('backdrop');
-    const lpamContainer = document.getElementById('lpamContainer');
-    const categories = document.getElementById('categories');
-    const mainLogo = document.getElementById('mainLogo');
+    const tagline = document.getElementById('tagline');
+    const video = document.getElementById('backgroundVideo');
 
-    let logoClicked = false;
+    video.playbackRate = 0.5;
+
+    let isClicked = false;
 
     logoBlock.addEventListener('click', () => {
-      if (logoClicked) return;
-      logoClicked = true;
-
+      if (isClicked) return;
+      isClicked = true;
+      logoBlock.classList.remove('hover-effect');
       backdrop.classList.add('expand');
-      mainLogo.classList.add('locked');
-      mainLogo.removeAttribute('onmouseover');
-      mainLogo.removeAttribute('onmouseout');
-
+      tagline.classList.remove('show');
       setTimeout(() => {
-        lpamContainer.style.display = 'none';
-        categories.style.display = 'flex';
-      }, 3000);
+        menuOptions.classList.add('visible');
+      }, 600);
     });
   </script>
 </body>
