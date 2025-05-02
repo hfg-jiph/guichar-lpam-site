@@ -4,6 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>:: GUICHAR LPAM ::</title>
+  <script>
+    // ✅ Script pour faire défiler le titre dans l'onglet
+    document.addEventListener("DOMContentLoaded", () => {
+      const baseTitle = "· Ultima Arx, Consilium Sapientis ·";
+      let scrollTitle = baseTitle;
+      setInterval(() => {
+        scrollTitle = scrollTitle.substring(1) + scrollTitle.charAt(0);
+        document.title = scrollTitle;
+      }, 250);
+    });
+  </script>
   <style>
     * {
       margin: 0;
@@ -31,6 +42,13 @@
     }
     .bar-bottom {
       bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .bar-bottom span {
+      color: white;
+      font-size: 14px;
     }
     .animation-section {
       position: absolute;
@@ -48,7 +66,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      pointer-events: none; /* ✅ bloque le bouton play iOS */
+      pointer-events: none;
     }
     .center-content {
       position: absolute;
@@ -154,7 +172,9 @@
     </div>
   </div>
 
-  <div class="bar-bottom"></div>
+  <div class="bar-bottom">
+    <span>© GUICHAR LPAM – All rights reserved</span>
+  </div>
 
   <script>
     const logoBlock = document.getElementById('logoBlock');
@@ -163,7 +183,6 @@
     const tagline = document.getElementById('tagline');
     const video = document.querySelector('video');
 
-    // ✅ Correction iOS : tentative de lancement explicite
     document.addEventListener('DOMContentLoaded', () => {
       const playPromise = video.play();
       if (playPromise !== undefined) {
