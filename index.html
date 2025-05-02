@@ -169,11 +169,34 @@
         transform: translateX(-80px) scaleY(1);
       }
     }
+
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .menu-options {
+        top: calc(50% + 60px);
+        font-size: 16px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+      }
+      .footer-text {
+        font-size: 12px;
+        right: 10px;
+        bottom: 10px;
+      }
+      .center-content img {
+        height: 60px;
+      }
+      .tagline {
+        font-size: 13px;
+        padding: 0 10px;
+      }
+    }
   </style>
 
   <!-- Title scroll effect -->
   <script>
-    let titleText = " \u00b7 Ultima Arx, Consilium Sapientis \u00b7 ";
+    let titleText = " · Ultima Arx, Consilium Sapientis · ";
     let position = 0;
     function scrollTitle() {
       document.title = titleText.substring(position) + titleText.substring(0, position);
@@ -188,7 +211,7 @@
   <div class="bar-top"></div>
 
   <div class="animation-section">
-    <video autoplay muted loop playsinline>
+    <video autoplay muted loop playsinline preload="auto">
       <source src="lake-birds2.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
