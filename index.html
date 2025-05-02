@@ -126,53 +126,38 @@
     .backdrop.expand {
       height: 100%;
     }
-    .menu-options {
+    .lpam-structure {
       display: none;
       position: absolute;
       top: 60%;
       left: 50%;
-      transform: translate(-80px, -50%);
+      transform: translate(-50%, -50%);
       z-index: 5;
-      flex-direction: column;
-      gap: 10px;
+      color: black;
       font-size: 14px;
-      color: black;
-      text-align: left;
-      opacity: 0;
-      transform-origin: top center;
-      animation: none;
+      font-family: Georgia, serif;
+      text-align: center;
+      line-height: 1.8em;
     }
-    .menu-options.visible {
-      display: flex;
-      animation: growFromLogo 0.6s ease forwards;
+    .lpam-structure.visible {
+      display: block;
     }
-    .menu-options a {
-      color: black;
-      text-decoration: none;
-      transition: transform 0.3s, color 0.3s;
-    }
-    .menu-options a:hover {
-      transform: translateX(5px);
-      color: #66023C;
-    }
-    .menu-options a::before {
-      content: '';
+    .lpam-letter {
+      font-weight: bold;
+      font-size: 20px;
       display: inline-block;
-      width: 6px;
-      height: 6px;
-      background-color: black;
-      margin-right: 10px;
-      vertical-align: middle;
+      width: 30px;
     }
-    @keyframes growFromLogo {
-      0% {
-        opacity: 0;
-        transform: translate(-80px, -50%) scaleY(0.2);
-      }
-      100% {
-        opacity: 1;
-        transform: translate(-80px, -50%) scaleY(1);
-      }
+    .lpam-loader {
+      font-style: italic;
+      opacity: 0.7;
+    }
+    .lpam-full {
+      display: none;
+      margin-top: 10px;
+    }
+    .lpam-full.visible {
+      display: block;
     }
     @media (max-width: 768px) and (orientation: landscape) {
       .bar-top,
@@ -182,28 +167,6 @@
       .animation-section {
         top: 20px;
         bottom: 20px;
-      }
-    }
-    @media (max-width: 480px) {
-      .menu-options {
-        top: 60%;
-        font-size: 16px;
-        left: 50%;
-        transform: translate(-80px, -50%);
-        text-align: left;
-        align-items: flex-start;
-      }
-      .footer-text {
-        font-size: 10px;
-        right: 10px;
-        bottom: 5px;
-      }
-      .center-content img {
-        height: 60px;
-      }
-      .tagline {
-        font-size: 13px;
-        padding: 0 10px;
       }
     }
   </style>
@@ -235,10 +198,11 @@
       <div class="tagline show" id="tagline">Advisory & Allocation across Listed, Private and Alternative Markets</div>
     </div>
 
-    <div class="menu-options" id="menuOptions">
-      <a href="#">Listed Markets</a>
-      <a href="#">Private Markets</a>
-      <a href="#">Alternative Markets</a>
+    <div class="lpam-structure" id="lpamStructure">
+      <div><span class="lpam-letter">L</span> <span class="lpam-loader" id="loaderL">.</span></div>
+      <div><span class="lpam-letter">P</span> <span class="lpam-loader" id="loaderP">.</span></div>
+      <div><span class="lpam-letter">A</span> <span class="lpam-loader" id="loaderA">.</span> <span class="lpam-letter">M</span> <span class="lpam-loader" id="loaderM">.</span></div>
+      <div class="lpam-full" id="lpamFull">Listed<br>Private<br>& Alternative Markets</div>
     </div>
   </div>
 
@@ -247,10 +211,11 @@
 
   <script>
     const logoBlock = document.getElementById('logoBlock');
-    const menuOptions = document.getElementById('menuOptions');
     const backdrop = document.getElementById('backdrop');
     const tagline = document.getElementById('tagline');
     const video = document.getElementById('backgroundVideo');
+    const lpamStructure = document.getElementById('lpamStructure');
+    const lpamFull = document.getElementById('lpamFull');
 
     video.playbackRate = 0.5;
 
@@ -262,9 +227,22 @@
       logoBlock.classList.remove('hover-effect');
       backdrop.classList.add('expand');
       tagline.classList.remove('show');
-      setTimeout(() => {
-        menuOptions.classList.add('visible');
-      }, 600);
+      lpamStructure.classList.add('visible');
+
+      const dots = ['.', '..', '...', '....', '.....'];
+      let index = 0;
+      const interval = setInterval(() => {
+        if (index < dots.length) {
+          document.getElementById('loaderL').textContent = dots[index];
+          document.getElementById('loaderP').textContent = dots[index];
+          document.getElementById('loaderA').textContent = dots[index];
+          document.getElementById('loaderM').textContent = dots[index];
+          index++;
+        } else {
+          clearInterval(interval);
+          lpamFull.classList.add('visible');
+        }
+      }, 500);
     });
   </script>
 </body>
