@@ -65,6 +65,10 @@
       top: 0;
       left: 0;
       pointer-events: none;
+      transition: filter 0.3s ease;
+    }
+    .animation-section.blur video {
+      filter: blur(4px);
     }
     .center-content {
       position: absolute;
@@ -99,6 +103,9 @@
     }
     .center-content.hover-effect:hover img:not(.locked) {
       content: url('logo_purple.png');
+    }
+    .center-content.hover-effect:hover ~ .animation-section {
+      filter: blur(4px);
     }
     .tagline {
       font-size: 14px;
@@ -222,7 +229,7 @@
 <body>
   <div class="bar-top"></div>
 
-  <div class="animation-section">
+  <div class="animation-section" id="animationSection">
     <video autoplay muted loop playsinline preload="auto" id="backgroundVideo">
       <source src="lake-birds2.mp4" type="video/mp4">
       Your browser does not support the video tag.
@@ -251,10 +258,19 @@
     const backdrop = document.getElementById('backdrop');
     const tagline = document.getElementById('tagline');
     const video = document.getElementById('backgroundVideo');
+    const animationSection = document.getElementById('animationSection');
 
     video.playbackRate = 0.5;
 
     let isClicked = false;
+
+    logoBlock.addEventListener('mouseover', () => {
+      if (!isClicked) animationSection.classList.add('blur');
+    });
+
+    logoBlock.addEventListener('mouseout', () => {
+      animationSection.classList.remove('blur');
+    });
 
     logoBlock.addEventListener('click', () => {
       if (isClicked) return;
