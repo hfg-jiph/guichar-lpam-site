@@ -40,20 +40,12 @@
       bottom: 0;
     }
     .footer-text {
-      position: absolute;
+      position: fixed;
       right: 20px;
       bottom: 20px;
       color: white;
       font-size: 14px;
-      opacity: 0;
-      animation: slideUpText 1.5s ease-out 2s forwards;
-      text-align: right;
-    }
-    @keyframes slideUpText {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      z-index: 6;
     }
     .animation-section {
       position: absolute;
@@ -117,20 +109,12 @@
       transform: translateX(-100px);
       width: 200px;
       height: 0;
-      background-color: rgba(204, 0, 0, 0.5);
+      background-color: rgba(170, 0, 0, 0.4);
       z-index: 2;
-      animation: redCarpetDrop 0.8s ease forwards;
+      transition: height 0.8s ease;
     }
     .backdrop.expand {
-      animation: redCarpetDrop 0.8s ease forwards;
-    }
-    @keyframes redCarpetDrop {
-      0% {
-        height: 0;
-      }
-      100% {
-        height: 100%;
-      }
+      height: 100%;
     }
     .menu-options {
       display: none;
@@ -157,7 +141,7 @@
     }
     .menu-options div:hover {
       transform: translateX(5px);
-      color: #222;
+      color: #555;
       font-weight: bold;
     }
     .menu-options div::before {
@@ -179,13 +163,16 @@
         transform: translateX(-80px) scaleY(1);
       }
     }
+
+    /* Responsive adjustments */
     @media (max-width: 480px) {
       .menu-options {
         top: calc(50% + 60px);
         font-size: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        text-align: center;
+        left: 20px;
+        transform: none;
+        text-align: left;
+        align-items: flex-start;
       }
       .footer-text {
         font-size: 12px;
