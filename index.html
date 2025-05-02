@@ -28,10 +28,11 @@
     .bar-top,
     .bar-bottom {
       position: absolute;
-      height: 60px;
       width: 100%;
       background-color: black;
       z-index: 3;
+      height: 60px;
+      transition: height 0.3s ease;
     }
     .bar-top {
       top: 0;
@@ -173,6 +174,16 @@
         transform: translate(-80px, -50%) scaleY(1);
       }
     }
+    @media (max-width: 768px) and (orientation: landscape) {
+      .bar-top,
+      .bar-bottom {
+        height: 20px;
+      }
+      .animation-section {
+        top: 20px;
+        bottom: 20px;
+      }
+    }
     @media (max-width: 480px) {
       .menu-options {
         top: 60%;
@@ -212,7 +223,7 @@
   <div class="bar-top"></div>
 
   <div class="animation-section">
-    <video autoplay muted playsinline preload="auto">
+    <video autoplay muted loop playsinline preload="auto" id="backgroundVideo">
       <source src="lake-birds2.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
@@ -239,6 +250,9 @@
     const menuOptions = document.getElementById('menuOptions');
     const backdrop = document.getElementById('backdrop');
     const tagline = document.getElementById('tagline');
+    const video = document.getElementById('backgroundVideo');
+
+    video.playbackRate = 0.5;
 
     let isClicked = false;
 
