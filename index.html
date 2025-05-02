@@ -6,10 +6,10 @@
   <title>:: GUICHAR LPAM ::</title>
 
   <!-- Favicon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
-  <link rel="shortcut icon" href="favicon/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
+  <link rel="shortcut icon" href="favicon_io/favicon.ico" type="image/x-icon">
 
   <style>
     * {
@@ -82,20 +82,27 @@
       z-index: 4;
       cursor: pointer;
       opacity: 0;
-      animation: fadeInLogo 2s ease-out 1s forwards;
+      animation: logoPulse 2s ease-out 1s forwards;
     }
-    @keyframes fadeInLogo {
+    @keyframes logoPulse {
       0% {
         opacity: 0;
-        transform: translate(-50%, -60%) scale(0.9);
+        transform: translate(-50%, -60%) scale(0.8);
+      }
+      50% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.5);
       }
       100% {
-        opacity: 1;
         transform: translate(-50%, -50%) scale(1);
       }
     }
     .center-content img {
       height: 80px;
+      transition: opacity 0.3s;
+    }
+    .center-content:hover img {
+      content: url('logo_purple.png');
     }
     .tagline {
       font-size: 14px;
@@ -173,8 +180,8 @@
       .menu-options {
         top: calc(50% + 60px);
         font-size: 16px;
-        left: 20px;
-        transform: none;
+        left: 50%;
+        transform: translateX(-80px);
         text-align: left;
       }
       .footer-text {
