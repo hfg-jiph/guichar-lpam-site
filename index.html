@@ -57,16 +57,6 @@
       overflow: hidden;
       z-index: 1;
     }
-    .animation-section video,
-    .bar-top,
-    .bar-bottom {
-      transition: filter 0.3s ease;
-    }
-    .blurred video,
-    .blurred .bar-top,
-    .blurred .bar-bottom {
-      filter: blur(4px);
-    }
     .animation-section video {
       width: 100%;
       height: 100%;
@@ -75,6 +65,21 @@
       top: 0;
       left: 0;
       pointer-events: none;
+      transition: filter 0.3s ease;
+    }
+    .veil-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.3);
+      z-index: 2;
+      pointer-events: none;
+      display: none;
+    }
+    .veil-visible .veil-overlay {
+      display: block;
     }
     .center-content {
       position: absolute;
@@ -134,7 +139,7 @@
       width: 200px;
       height: 0;
       background-color: rgba(102, 2, 60, 0.6);
-      z-index: 2;
+      z-index: 3;
       transition: height 0.8s ease;
     }
     .backdrop.expand {
@@ -150,6 +155,7 @@
       flex-direction: column;
       gap: 10px;
       font-size: 14px;
+      font-weight: normal;
       color: black;
       text-align: left;
       opacity: 0;
@@ -163,11 +169,13 @@
     .menu-options a {
       color: black;
       text-decoration: none;
-      transition: transform 0.3s, color 0.3s;
+      font-size: 14px;
+      transition: transform 0.3s, color 0.3s, font-weight 0.3s;
     }
     .menu-options a:hover {
       transform: translateX(5px);
       color: #66023C;
+      font-weight: bold;
     }
     .menu-options a::before {
       content: '';
@@ -201,7 +209,7 @@
     @media (max-width: 480px) {
       .menu-options {
         top: 60%;
-        font-size: 16px;
+        font-size: 14px;
         left: 50%;
         transform: translate(-80px, -50%);
         text-align: left;
@@ -236,11 +244,12 @@
 <body>
   <div class="bar-top"></div>
 
-  <div class="animation-section">
+  <div class="animation-section" id="animationSection">
     <video autoplay muted loop playsinline preload="auto" id="backgroundVideo">
       <source src="lake-birds2.mp4" type="video/mp4">
       Your browser does not support the video tag.
     </video>
+    <div class="veil-overlay" id="veilOverlay"></div>
 
     <div class="backdrop" id="backdrop"></div>
 
@@ -253,8 +262,8 @@
     </div>
 
     <div class="menu-options" id="menuOptions">
-      <a href="#">Listed Markets</a>
-      <a href="#">Private Markets</a>
+      <a href="#">Listed</a>
+      <a href="#">Private</a>
       <a href="#">Alternative Markets</a>
     </div>
   </div>
@@ -267,10 +276,9 @@
     const menuOptions = document.getElementById('menuOptions');
     const backdrop = document.getElementById('backdrop');
     const tagline = document.getElementById('tagline');
+    const veilOverlay = document.getElementById('veilOverlay');
+    const animationSection = document.getElementById('animationSection');
     const video = document.getElementById('backgroundVideo');
-    const animationSection = document.querySelector('.animation-section');
-    const barTop = document.querySelector('.bar-top');
-    const barBottom = document.querySelector('.bar-bottom');
 
     video.playbackRate = 0.5;
 
@@ -278,17 +286,13 @@
 
     logoBlock.addEventListener('mouseover', () => {
       if (!isClicked) {
-        animationSection.classList.add('blurred');
-        barTop.classList.add('blurred');
-        barBottom.classList.add('blurred');
+        animationSection.classList.add('veil-visible');
       }
     });
 
     logoBlock.addEventListener('mouseout', () => {
       if (!isClicked) {
-        animationSection.classList.remove('blurred');
-        barTop.classList.remove('blurred');
-        barBottom.classList.remove('blurred');
+        animationSection.classList.remove('veil-visible');
       }
     });
 
@@ -298,9 +302,7 @@
       logoBlock.classList.remove('hover-effect');
       backdrop.classList.add('expand');
       tagline.classList.remove('show');
-      animationSection.classList.remove('blurred');
-      barTop.classList.remove('blurred');
-      barBottom.classList.remove('blurred');
+      animationSection.classList.remove('veil-visible');
       setTimeout(() => {
         menuOptions.classList.add('visible');
       }, 600);
