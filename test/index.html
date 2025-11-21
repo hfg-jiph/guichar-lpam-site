@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUICHAR LPAM - Strategy & Financial Management</title>
+    <style>
+        /* --- RESET & FONTS --- */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
+
+        :root {
+            --color-bg: #0a0a0f; /* Fond très sombre, presque noir */
+            --color-purple: #800080; /* Pourpre Centurion */
+            --color-purple-light: #a55eea;
+            --color-text: #ffffff;
+            --color-text-muted: #a0a0a0;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --sidebar-width: 250px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden; /* On gère le scroll manuellement */
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            border-right: 1px solid var(--glass-border);
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 10px rgba(128, 0, 128, 0.3));
+        }
+
+        .nav-links ul {
+            list-style: none;
+            margin-top: 60px;
+        }
+
+        .nav-links li {
+            margin-bottom: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: color 0.3s, padding-left 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--color-purple-light);
+            padding-left: 10px;
+        }
+        
+        .nav-links a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--color-purple);
+            border-radius: 50%;
+        }
+
+        .lang-switch {
+            display: flex;
+            gap: 10px;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .lang-btn {
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+        .lang-btn.active {
+            opacity: 1;
+            font-weight: bold;
+            color: var(--color-purple-light);
+        }
+
+        /* --- HORIZONTAL CONTAINER --- */
+        .scroll-container {
+            position: absolute;
+            left: var(--sidebar-width);
+            top: 0;
+            height: 100%;
+            width: calc(100vw - var(--sidebar-width));
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            /* Cache la barre de scroll */
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* --- SECTIONS --- */
+        section {
+            min-width: 100%; /* Chaque section prend tout l'écran restant */
+            height: 100%;
+            padding: 80px 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            border-right: 1px solid var(--glass-border);
+        }
+
+        /* Background Decor Elements */
+        .bg-gradient {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(128,0,128,0.15) 0%, rgba(0,0,0,0) 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            background: linear-gradient(to right, #fff, #dcdcdc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 3rem;
+            color: var(--color-purple-light);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--color-text-muted);
+            max-width: 600px;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        .motto {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            color: var(--color-purple);
+            margin-top: 30px;
+            font-size: 1.5rem;
+            border-left: 2px solid var(--color-purple);
+            padding-left: 20px;
+        }
+
+        /* --- CARDS FOR EXPERTISE --- */
+        .cards-wrapper {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            width: 280px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s, border-color 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--color-purple);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--color-purple);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .card ul li {
+            color: var(--color-text-muted);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .card ul li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--color-purple);
+        }
+
+        /* --- FOOTER / CONTACT --- */
+        .contact-info {
+            font-size: 1.2rem;
+            margin-top: 40px;
+        }
+        .contact-info p { margin-bottom: 10px; }
+        .contact-highlight { color: var(--color-purple-light); }
+
+        /* --- RESPONSIVE (Mobile simple) --- */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: 80px;
+                flex-direction: row;
+                align-items: center;
+                padding: 10px 20px;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+            }
+            .logo-container img { height: 40px; width: auto; }
+            .nav-links { display: none; /* Menu burger à faire si besoin */ }
+            
+            .scroll-container {
+                left: 0;
+                top: 80px;
+                width: 100%;
+                height: calc(100% - 80px);
+                flex-direction: column; /* Retour au vertical sur mobile */
+                overflow-y: auto;
+            }
+            section { border-right: none; border-bottom: 1px solid var(--glass-border); padding: 40px 20px; height: auto; min-height: 100%;}
+            h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="logo-container">
+            <img src="img/logo_purple.png" alt="GUICHAR LPAM Logo">
+        </div>
+
+        <div class="nav-links">
+            <ul>
+                <li><a href="#home" class="active" data-target="home">Home</a></li>
+                <li><a href="#listed" data-target="listed">Listed Markets</a></li>
+                <li><a href="#private" data-target="private">Private Markets</a></li>
+                <li><a href="#alternative" data-target="alternative">Alternative</a></li>
+                <li><a href="#contact" data-target="contact">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="lang-switch">
+            <span class="lang-btn active" onclick="setLanguage('en')">EN</span>
+            <span>|</span>
+            <span class="lang-btn" onclick="setLanguage('fr')">FR</span>
+        </div>
+    </nav>
+
+    <main class="scroll-container" id="mainScroll">
+        
+        <section id="home">
+            <div class="bg-gradient"></div>
+            <h1 class="lang-en">Strategic Counsel<br>& Financial Management</h1>
+            <h1 class="lang-fr" style="display:none;">Conseil en Stratégie<br>& Gestion Financière</h1>
+            
+            <p class="subtitle lang-en">
+                We act as the armed wing of your company. Providing governance support, 
+                advanced reporting, and wealth synthesis.
+            </p>
+            <p class="subtitle lang-fr" style="display:none;">
+                Nous sommes le bras armé de votre entreprise. Appui à la gouvernance, 
+                reporting avancé et synthèse patrimoniale.
+            </p>
+
+            <div class="motto">
+                "Ultima Arx, Consilium Sapientis"
+            </div>
+        </section>
+
+        <section id="listed">
+            <div class="bg-gradient"></div>
+            <h2 class="lang-en">Listed Markets</h2>
+            <h2 class="lang-fr" style="display:none;">Marchés Cotés</h2>
+            
+            <p class="subtitle lang-en">Expertise in traditional capitalization contracts.</p>
+            <p class="subtitle lang-fr" style="display:none;">Expertise sur les contrats de capitalisation traditionnels.</p>
+
+            <div class="cards-wrapper">
+                <div class="card">
+                    <h3>Equities</h3>
+                    <ul>
+                        <li class="lang-en">Global Stocks</li>
+                        <li class="lang-fr" style="display:none;">Actions Monde</li>
+                        <li class="lang-en">Sectoral Analysis</li>
+                        <li class="lang-fr" style="display:none;">Analyse Sectorielle</li>
+                        <li class="lang-en">Dividend Strategy</li>
+                        <li class="lang-fr" style="display:none;">Stratégie de Dividendes</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Fixed Income</h3>
+                    <ul>
+                        <li class="lang-en">Government Bonds</li>
+                        <li class="lang-fr" style="display:none;">Obligations d'État</li>
+                        <li class="lang-en">Corporate Credit</li>
+                        <li class="lang-fr" style="display:none;">Crédit Corporate</li>
+                        <li class="lang-en">Yield Optimization</li>
+                        <li class="lang-fr" style="display:none;">Optimisation de Rendement</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="private">
+            <div class="bg-gradient"></div>
+            <h2 class="lang-en">Private Markets</h2>
+            <h2 class="lang-fr" style="display:none;">Marchés Privés</h2>
+            
+            <p class="subtitle lang-en">Accessing value in the unlisted economy.</p>
+            <p class="subtitle lang-fr" style="display:none;">Accéder à la valeur de l'économie réelle non cotée.</p>
+
+            <div class="cards-wrapper">
+                <div class="card">
+                    <h3>Equity</h3>
+                    <ul>
+                        <li>Private Equity (LBO/Growth)</li>
+                        <li>Venture Capital</li>
+                        <li class="lang-en">Secondary Market</li>
+                        <li class="lang-fr" style="display:none;">Marché Secondaire</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Debt</h3>
+                    <ul>
+                        <li>Private Debt</li>
+                        <li>Mezzanine</li>
+                        <li class="lang-en">Unitranche</li>
+                        <li class="lang-fr" style="display:none;">Dette Unitranche</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="alternative">
+            <div class="bg-gradient"></div>
+            <h2 class="lang-en">Alternative Markets</h2>
+            <h2 class="lang-fr" style="display:none;">Marchés Alternatifs</h2>
+            
+            <p class="subtitle lang-en">Diversification through uncorrelated assets.</p>
+            <p class="subtitle lang-fr" style="display:none;">Diversification via des actifs décorrélés.</p>
+
+            <div class="cards-wrapper">
+                <div class="card">
+                    <h3>Real Estate & Lending</h3>
+                    <ul>
+                        <li>SCPI / OPCI</li>
+                        <li>Club Deals</li>
+                        <li>Crowdlending</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3>Digital & Tangible</h3>
+                    <ul>
+                        <li>Crypto-assets / Blockchain</li>
+                        <li class="lang-en">Real Assets (Art, Wine)</li>
+                        <li class="lang-fr" style="display:none;">Actifs Réels (Art, Vin)</li>
+                        <li class="lang-en">Infrastructure</li>
+                        <li class="lang-fr" style="display:none;">Infrastructures</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="bg-gradient"></div>
+            <h2 class="lang-en">Contact</h2>
+            <h2 class="lang-fr" style="display:none;">Contact</h2>
+            
+            <div class="contact-info">
+                <p>GUICHAR <span class="contact-highlight">LPAM</span></p>
+                <p>Paris, France</p>
+                <p class="contact-highlight">contact@guichar-lpam.com</p>
+            </div>
+            
+            <div style="margin-top: 50px; font-size: 0.8rem; color: var(--color-text-muted);">
+                &copy; 2025 GUICHAR LPAM. All rights reserved.
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // --- 1. Gestion du Scroll Horizontal avec la molette ---
+        const scrollContainer = document.getElementById("mainScroll");
+
+        scrollContainer.addEventListener("wheel", (evt) => {
+            // On empêche le scroll vertical par défaut si on est sur desktop
+            if(window.innerWidth > 768) {
+                evt.preventDefault();
+                scrollContainer.scrollLeft += evt.deltaY;
+            }
+        });
+
+        // --- 2. Mise à jour du menu actif ---
+        // On détecte quelle section est visible pour allumer le bon lien dans le menu
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-links a');
+
+        const observerOptions = {
+            root: scrollContainer,
+            threshold: 0.5 // La section doit être visible à 50%
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Retirer la classe active partout
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    // L'ajouter sur le lien correspondant à l'ID de la section
+                    const activeLink = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
+                    if(activeLink) activeLink.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+
+        // --- 3. Gestion des Langues (Switch EN/FR) ---
+        function setLanguage(lang) {
+            const enElements = document.querySelectorAll('.lang-en');
+            const frElements = document.querySelectorAll('.lang-fr');
+            const btns = document.querySelectorAll('.lang-btn');
+
+            if (lang === 'fr') {
+                enElements.forEach(el => el.style.display = 'none');
+                frElements.forEach(el => el.style.display = 'block');
+                // Mise à jour des boutons
+                btns[0].classList.remove('active'); // EN
+                btns[1].classList.add('active');    // FR
+            } else {
+                enElements.forEach(el => el.style.display = 'block');
+                frElements.forEach(el => el.style.display = 'none');
+                // Mise à jour des boutons
+                btns[0].classList.add('active');    // EN
+                btns[1].classList.remove('active'); // FR
+            }
+        }
+    </script>
+</body>
+</html>
