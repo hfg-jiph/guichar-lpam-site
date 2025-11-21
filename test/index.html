@@ -4,106 +4,124 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GUICHAR LPAM - Strategy & Financial Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- RESET & FONTS --- */
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
-
+        /* --- VARIABLES & RESET --- */
         :root {
-            --color-bg: #0a0a0f; /* Fond très sombre, presque noir */
-            --color-purple: #800080; /* Pourpre Centurion */
-            --color-purple-light: #a55eea;
-            --color-text: #ffffff;
-            --color-text-muted: #a0a0a0;
-            --glass-bg: rgba(255, 255, 255, 0.05);
+            /* Couleur basée sur votre CMYK 45/100/47/42 */
+            --brand-purple: #6A0F49; 
+            --brand-purple-light: #962d6e;
+            
+            --bg-dark: #050507;
+            --text-white: #ffffff;
+            --text-grey: #cfcfcf;
+            
+            --glass-bg: rgba(20, 20, 25, 0.7);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --sidebar-width: 250px;
+            
+            --sidebar-width: 280px;
+            --font-main: 'Montserrat', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            background-color: var(--color-bg);
-            color: var(--color-text);
-            font-family: 'Montserrat', sans-serif;
-            overflow: hidden; /* On gère le scroll manuellement */
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: var(--font-main);
+            overflow: hidden; /* Scroll géré manuellement sur desktop */
             height: 100vh;
             width: 100vw;
         }
 
-        /* --- SIDEBAR --- */
+        /* --- BACKGROUND PARALLAX IMAGE --- */
+        /* Remplacez l'URL par votre propre image de fond si besoin */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 120vw; /* Plus large pour permettre le mouvement */
+            height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15; /* Très sombre pour ne pas gêner la lecture */
+            z-index: -1;
+            transition: transform 0.1s ease-out;
+            pointer-events: none;
+        }
+
+        /* --- SIDEBAR (Navigation) --- */
         .sidebar {
             position: fixed;
             left: 0;
             top: 0;
             width: var(--sidebar-width);
             height: 100%;
-            background: rgba(10, 10, 15, 0.95);
+            background: rgba(5, 5, 7, 0.95); /* Quasi opaque pour lisibilité */
             border-right: 1px solid var(--glass-border);
-            padding: 40px;
+            padding: 50px 40px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .logo-container img {
             max-width: 100%;
             height: auto;
-            filter: drop-shadow(0 0 10px rgba(128, 0, 128, 0.3));
+            /* Petit glow subtil couleur pourpre */
+            filter: drop-shadow(0 0 8px rgba(106, 15, 73, 0.4));
         }
 
-        .nav-links ul {
-            list-style: none;
-            margin-top: 60px;
-        }
-
-        .nav-links li {
-            margin-bottom: 25px;
-        }
+        .nav-links ul { list-style: none; margin-top: 60px; }
+        .nav-links li { margin-bottom: 30px; }
 
         .nav-links a {
             text-decoration: none;
-            color: var(--color-text-muted);
-            font-size: 0.9rem;
+            color: var(--text-grey);
+            font-size: 0.85rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            transition: color 0.3s, padding-left 0.3s;
+            letter-spacing: 3px;
+            font-weight: 500;
+            transition: color 0.3s ease;
             position: relative;
+            display: inline-block;
         }
 
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--color-purple-light);
-            padding-left: 10px;
-        }
-        
-        .nav-links a.active::before {
+        /* Correction du désalignement : on ne change pas la taille, on ajoute un élément visuel */
+        .nav-links a::after {
             content: '';
             position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
             left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 4px;
-            background: var(--color-purple);
-            border-radius: 50%;
+            background-color: var(--brand-purple);
+            transition: width 0.3s ease;
         }
+
+        .nav-links a:hover { color: var(--text-white); }
+        .nav-links a:hover::after { width: 100%; }
+        
+        .nav-links a.active { color: var(--text-white); }
+        .nav-links a.active::after { width: 100%; background-color: var(--brand-purple-light); }
 
         .lang-switch {
             display: flex;
-            gap: 10px;
-            font-size: 0.8rem;
+            gap: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
             cursor: pointer;
+            margin-bottom: 20px;
         }
-
-        .lang-btn {
-            opacity: 0.5;
-            transition: opacity 0.3s;
-        }
-        .lang-btn.active {
-            opacity: 1;
-            font-weight: bold;
-            color: var(--color-purple-light);
-        }
+        .lang-btn { opacity: 0.4; transition: 0.3s; }
+        .lang-btn:hover { opacity: 0.8; }
+        .lang-btn.active { opacity: 1; color: var(--brand-purple-light); }
 
         /* --- HORIZONTAL CONTAINER --- */
         .scroll-container {
@@ -116,181 +134,190 @@
             overflow-x: auto;
             overflow-y: hidden;
             scroll-behavior: smooth;
-            /* Cache la barre de scroll */
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            scrollbar-width: none; /* Firefox */
         }
-        .scroll-container::-webkit-scrollbar {
-            display: none;
-        }
+        .scroll-container::-webkit-scrollbar { display: none; }
 
         /* --- SECTIONS --- */
         section {
-            min-width: 100%; /* Chaque section prend tout l'écran restant */
+            min-width: 100%;
             height: 100%;
-            padding: 80px 100px;
+            padding: 0 120px; /* Plus d'espace sur les côtés */
             display: flex;
             flex-direction: column;
             justify-content: center;
-            position: relative;
             border-right: 1px solid var(--glass-border);
+            position: relative;
         }
 
-        /* Background Decor Elements */
-        .bg-gradient {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(128,0,128,0.15) 0%, rgba(0,0,0,0) 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        h1, h2 {
-            font-family: 'Playfair Display', serif;
-            margin-bottom: 20px;
-        }
-
+        /* TYPOGRAPHY "IMPOSING" */
         h1 {
-            font-size: 4rem;
+            font-size: 4.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
             line-height: 1.1;
-            background: linear-gradient(to right, #fff, #dcdcdc);
+            letter-spacing: -1px;
+            margin-bottom: 30px;
+            background: linear-gradient(to bottom right, #fff, #aaa);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         h2 {
-            font-size: 3rem;
-            color: var(--color-purple-light);
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            color: var(--text-white);
+            margin-bottom: 10px;
+            border-left: 5px solid var(--brand-purple);
+            padding-left: 30px;
         }
 
         .subtitle {
-            font-size: 1.2rem;
-            color: var(--color-text-muted);
-            max-width: 600px;
-            line-height: 1.6;
-            margin-bottom: 40px;
+            font-size: 1.1rem;
+            color: var(--text-grey);
+            max-width: 650px;
+            line-height: 1.7;
+            margin-bottom: 50px;
+            font-weight: 300;
         }
 
         .motto {
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
-            color: var(--color-purple);
-            margin-top: 30px;
-            font-size: 1.5rem;
-            border-left: 2px solid var(--color-purple);
-            padding-left: 20px;
+            font-family: var(--font-main);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--brand-purple-light);
+            margin-top: 40px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .motto::before {
+            content: '';
+            width: 40px;
+            height: 2px;
+            background: var(--brand-purple);
         }
 
-        /* --- CARDS FOR EXPERTISE --- */
+        /* --- CARDS --- */
         .cards-wrapper {
             display: flex;
             gap: 30px;
-            margin-top: 40px;
             flex-wrap: wrap;
         }
 
         .card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
-            padding: 30px;
-            width: 280px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s, border-color 0.3s;
-            position: relative;
-            overflow: hidden;
+            padding: 40px;
+            width: 320px;
+            transition: transform 0.4s, background 0.4s;
         }
 
         .card:hover {
             transform: translateY(-10px);
-            border-color: var(--color-purple);
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: var(--color-purple);
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .card:hover::before {
-            opacity: 1;
+            background: rgba(106, 15, 73, 0.15); /* Légère teinte pourpre au survol */
+            border-color: var(--brand-purple);
         }
 
         .card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            font-weight: 400;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            color: var(--text-white);
+            letter-spacing: 1px;
         }
 
-        .card ul {
-            list-style: none;
-            padding-left: 0;
-        }
-
+        .card ul { list-style: none; }
         .card ul li {
-            color: var(--color-text-muted);
-            margin-bottom: 8px;
-            font-size: 0.9rem;
-            position: relative;
+            color: var(--text-grey);
+            margin-bottom: 12px;
+            font-size: 0.95rem;
             padding-left: 15px;
+            position: relative;
+            font-weight: 300;
         }
-
         .card ul li::before {
-            content: '›';
+            content: '';
             position: absolute;
             left: 0;
-            color: var(--color-purple);
+            top: 8px;
+            width: 4px;
+            height: 4px;
+            background: var(--brand-purple);
         }
 
-        /* --- FOOTER / CONTACT --- */
-        .contact-info {
-            font-size: 1.2rem;
-            margin-top: 40px;
+        /* --- CONTACT --- */
+        .contact-box {
+            border: 1px solid var(--brand-purple);
+            padding: 40px;
+            background: rgba(106, 15, 73, 0.05);
+            display: inline-block;
         }
-        .contact-info p { margin-bottom: 10px; }
-        .contact-highlight { color: var(--color-purple-light); }
+        .contact-email {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--brand-purple-light);
+            margin-top: 10px;
+            display: block;
+        }
 
-        /* --- RESPONSIVE (Mobile simple) --- */
-        @media (max-width: 768px) {
+        /* --- RESPONSIVE MOBILE (Tablettes et Téléphones) --- */
+        @media (max-width: 1024px) {
+            body { overflow: auto; height: auto; }
+            
+            /* Navigation en haut */
             .sidebar {
                 width: 100%;
-                height: 80px;
+                height: auto;
+                position: sticky;
                 flex-direction: row;
                 align-items: center;
-                padding: 10px 20px;
+                padding: 15px 20px;
                 border-right: none;
                 border-bottom: 1px solid var(--glass-border);
+                background: #050507;
             }
-            .logo-container img { height: 40px; width: auto; }
-            .nav-links { display: none; /* Menu burger à faire si besoin */ }
+            .logo-container img { height: 35px; width: auto; }
+            .nav-links { display: none; } /* Masquer menu sur mobile pour l'instant */
             
+            /* Scroll Vertical */
             .scroll-container {
+                position: relative;
                 left: 0;
-                top: 80px;
                 width: 100%;
-                height: calc(100% - 80px);
-                flex-direction: column; /* Retour au vertical sur mobile */
-                overflow-y: auto;
+                height: auto;
+                flex-direction: column;
+                overflow: visible;
             }
-            section { border-right: none; border-bottom: 1px solid var(--glass-border); padding: 40px 20px; height: auto; min-height: 100%;}
-            h1 { font-size: 2.5rem; }
+            
+            section {
+                height: auto; /* Hauteur auto */
+                min-height: 80vh; /* Au moins 80% de l'écran */
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+                padding: 60px 20px;
+            }
+
+            .parallax-bg { display: none; } /* Désactiver parallaxe sur mobile pour perfs */
+
+            h1 { font-size: 2.8rem; }
+            h2 { font-size: 2.2rem; }
+            .card { width: 100%; }
         }
     </style>
 </head>
 <body>
 
+    <div class="parallax-bg" id="bgImage"></div>
+
     <nav class="sidebar">
         <div class="logo-container">
-            <img src="img/logo_purple.png" alt="GUICHAR LPAM Logo">
+            <img src="img/logo_purple.png" alt="GUICHAR LPAM">
         </div>
 
         <div class="nav-links">
@@ -305,7 +332,7 @@
 
         <div class="lang-switch">
             <span class="lang-btn active" onclick="setLanguage('en')">EN</span>
-            <span>|</span>
+            <span style="opacity:0.2">/</span>
             <span class="lang-btn" onclick="setLanguage('fr')">FR</span>
         </div>
     </nav>
@@ -313,31 +340,27 @@
     <main class="scroll-container" id="mainScroll">
         
         <section id="home">
-            <div class="bg-gradient"></div>
             <h1 class="lang-en">Strategic Counsel<br>& Financial Management</h1>
-            <h1 class="lang-fr" style="display:none;">Conseil en Stratégie<br>& Gestion Financière</h1>
+            <h1 class="lang-fr" style="display:none;">Conseil Stratégique<br>& Gestion Financière</h1>
             
             <p class="subtitle lang-en">
-                We act as the armed wing of your company. Providing governance support, 
-                advanced reporting, and wealth synthesis.
+                We operate as the strategic arm of your corporation. Delivering governance support, advanced reporting, and wealth synthesis.
             </p>
             <p class="subtitle lang-fr" style="display:none;">
-                Nous sommes le bras armé de votre entreprise. Appui à la gouvernance, 
-                reporting avancé et synthèse patrimoniale.
+                Nous agissons comme le bras armé de votre société. Appui à la gouvernance, reporting avancé et synthèse patrimoniale.
             </p>
 
             <div class="motto">
-                "Ultima Arx, Consilium Sapientis"
+                Ultima Arx, Consilium Sapientis
             </div>
         </section>
 
         <section id="listed">
-            <div class="bg-gradient"></div>
             <h2 class="lang-en">Listed Markets</h2>
             <h2 class="lang-fr" style="display:none;">Marchés Cotés</h2>
             
-            <p class="subtitle lang-en">Expertise in traditional capitalization contracts.</p>
-            <p class="subtitle lang-fr" style="display:none;">Expertise sur les contrats de capitalisation traditionnels.</p>
+            <p class="subtitle lang-en">Capitalization contracts & Traditional Assets.</p>
+            <p class="subtitle lang-fr" style="display:none;">Contrats de capitalisation & Actifs Traditionnels.</p>
 
             <div class="cards-wrapper">
                 <div class="card">
@@ -348,7 +371,7 @@
                         <li class="lang-en">Sectoral Analysis</li>
                         <li class="lang-fr" style="display:none;">Analyse Sectorielle</li>
                         <li class="lang-en">Dividend Strategy</li>
-                        <li class="lang-fr" style="display:none;">Stratégie de Dividendes</li>
+                        <li class="lang-fr" style="display:none;">Stratégie Dividendes</li>
                     </ul>
                 </div>
                 <div class="card">
@@ -357,55 +380,50 @@
                         <li class="lang-en">Government Bonds</li>
                         <li class="lang-fr" style="display:none;">Obligations d'État</li>
                         <li class="lang-en">Corporate Credit</li>
-                        <li class="lang-fr" style="display:none;">Crédit Corporate</li>
-                        <li class="lang-en">Yield Optimization</li>
-                        <li class="lang-fr" style="display:none;">Optimisation de Rendement</li>
+                        <li class="lang-fr" style="display:none;">Crédit Entreprise</li>
                     </ul>
                 </div>
             </div>
         </section>
 
         <section id="private">
-            <div class="bg-gradient"></div>
             <h2 class="lang-en">Private Markets</h2>
             <h2 class="lang-fr" style="display:none;">Marchés Privés</h2>
             
-            <p class="subtitle lang-en">Accessing value in the unlisted economy.</p>
-            <p class="subtitle lang-fr" style="display:none;">Accéder à la valeur de l'économie réelle non cotée.</p>
+            <p class="subtitle lang-en">Unlocking value in the real economy.</p>
+            <p class="subtitle lang-fr" style="display:none;">Création de valeur dans l'économie réelle.</p>
 
             <div class="cards-wrapper">
                 <div class="card">
-                    <h3>Equity</h3>
+                    <h3>Private Equity</h3>
                     <ul>
-                        <li>Private Equity (LBO/Growth)</li>
+                        <li>LBO / Growth Capital</li>
                         <li>Venture Capital</li>
                         <li class="lang-en">Secondary Market</li>
                         <li class="lang-fr" style="display:none;">Marché Secondaire</li>
                     </ul>
                 </div>
                 <div class="card">
-                    <h3>Debt</h3>
+                    <h3>Private Debt</h3>
                     <ul>
-                        <li>Private Debt</li>
+                        <li>Senior Debt</li>
                         <li>Mezzanine</li>
-                        <li class="lang-en">Unitranche</li>
-                        <li class="lang-fr" style="display:none;">Dette Unitranche</li>
+                        <li>Unitranche</li>
                     </ul>
                 </div>
             </div>
         </section>
 
         <section id="alternative">
-            <div class="bg-gradient"></div>
             <h2 class="lang-en">Alternative Markets</h2>
             <h2 class="lang-fr" style="display:none;">Marchés Alternatifs</h2>
             
-            <p class="subtitle lang-en">Diversification through uncorrelated assets.</p>
-            <p class="subtitle lang-fr" style="display:none;">Diversification via des actifs décorrélés.</p>
+            <p class="subtitle lang-en">Decorrelation & Tangible Assets.</p>
+            <p class="subtitle lang-fr" style="display:none;">Décorrélation & Actifs Tangibles.</p>
 
             <div class="cards-wrapper">
                 <div class="card">
-                    <h3>Real Estate & Lending</h3>
+                    <h3>Real Estate</h3>
                     <ul>
                         <li>SCPI / OPCI</li>
                         <li>Club Deals</li>
@@ -413,11 +431,11 @@
                     </ul>
                 </div>
                 <div class="card">
-                    <h3>Digital & Tangible</h3>
+                    <h3>New Assets</h3>
                     <ul>
-                        <li>Crypto-assets / Blockchain</li>
-                        <li class="lang-en">Real Assets (Art, Wine)</li>
-                        <li class="lang-fr" style="display:none;">Actifs Réels (Art, Vin)</li>
+                        <li>Crypto / Blockchain</li>
+                        <li class="lang-en">Luxury (Art, Wine)</li>
+                        <li class="lang-fr" style="display:none;">Luxe (Art, Vin)</li>
                         <li class="lang-en">Infrastructure</li>
                         <li class="lang-fr" style="display:none;">Infrastructures</li>
                     </ul>
@@ -426,61 +444,60 @@
         </section>
 
         <section id="contact">
-            <div class="bg-gradient"></div>
             <h2 class="lang-en">Contact</h2>
             <h2 class="lang-fr" style="display:none;">Contact</h2>
             
-            <div class="contact-info">
-                <p>GUICHAR <span class="contact-highlight">LPAM</span></p>
-                <p>Paris, France</p>
-                <p class="contact-highlight">contact@guichar-lpam.com</p>
+            <div class="contact-box">
+                <p style="color:white; font-weight:300;">GUICHAR LPAM</p>
+                <p style="color:gray; margin-bottom:20px;">Paris, France</p>
+                <a href="mailto:contact@guichar-lpam.com" class="contact-email">contact@guichar-lpam.com</a>
             </div>
             
-            <div style="margin-top: 50px; font-size: 0.8rem; color: var(--color-text-muted);">
+            <div style="margin-top: 60px; font-size: 0.75rem; color: #555;">
                 &copy; 2025 GUICHAR LPAM. All rights reserved.
             </div>
         </section>
     </main>
 
     <script>
-        // --- 1. Gestion du Scroll Horizontal avec la molette ---
         const scrollContainer = document.getElementById("mainScroll");
+        const bgImage = document.getElementById("bgImage");
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = document.querySelectorAll('section');
 
+        // 1. SCROLL HORIZONTAL (Desktop uniquement)
         scrollContainer.addEventListener("wheel", (evt) => {
-            // On empêche le scroll vertical par défaut si on est sur desktop
-            if(window.innerWidth > 768) {
+            if(window.innerWidth > 1024) {
                 evt.preventDefault();
                 scrollContainer.scrollLeft += evt.deltaY;
             }
         });
 
-        // --- 2. Mise à jour du menu actif ---
-        // On détecte quelle section est visible pour allumer le bon lien dans le menu
-        const sections = document.querySelectorAll('section');
-        const navLinks = document.querySelectorAll('.nav-links a');
+        // 2. EFFET PARALLAXE
+        scrollContainer.addEventListener("scroll", () => {
+            if(window.innerWidth > 1024) {
+                // On déplace l'image de fond de 15% de la vitesse du scroll
+                let x = scrollContainer.scrollLeft;
+                bgImage.style.transform = `translateX(${-x * 0.15}px)`;
+            }
+        });
 
-        const observerOptions = {
-            root: scrollContainer,
-            threshold: 0.5 // La section doit être visible à 50%
-        };
-
+        // 3. NAVIGATION ACTIVE
+        const observerOptions = { root: scrollContainer, threshold: 0.5 };
+        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Retirer la classe active partout
                     navLinks.forEach(link => link.classList.remove('active'));
-                    // L'ajouter sur le lien correspondant à l'ID de la section
                     const activeLink = document.querySelector(`.nav-links a[href="#${entry.target.id}"]`);
                     if(activeLink) activeLink.classList.add('active');
                 }
             });
         }, observerOptions);
 
-        sections.forEach(section => {
-            observer.observe(section);
-        });
+        sections.forEach(section => observer.observe(section));
 
-        // --- 3. Gestion des Langues (Switch EN/FR) ---
+        // 4. LANGUE
         function setLanguage(lang) {
             const enElements = document.querySelectorAll('.lang-en');
             const frElements = document.querySelectorAll('.lang-fr');
@@ -489,15 +506,13 @@
             if (lang === 'fr') {
                 enElements.forEach(el => el.style.display = 'none');
                 frElements.forEach(el => el.style.display = 'block');
-                // Mise à jour des boutons
-                btns[0].classList.remove('active'); // EN
-                btns[1].classList.add('active');    // FR
+                btns[0].classList.remove('active'); 
+                btns[1].classList.add('active');
             } else {
                 enElements.forEach(el => el.style.display = 'block');
                 frElements.forEach(el => el.style.display = 'none');
-                // Mise à jour des boutons
-                btns[0].classList.add('active');    // EN
-                btns[1].classList.remove('active'); // FR
+                btns[0].classList.add('active');
+                btns[1].classList.remove('active');
             }
         }
     </script>
