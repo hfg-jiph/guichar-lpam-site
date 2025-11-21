@@ -290,20 +290,20 @@
     <div class="parallax-bg" id="bgImage"></div>
 
     <nav class="sidebar">
-        <div class="logo-container" onclick="scrollToSection('home', true)">
+        <div class="logo-container" onclick="handleNavClick(null, 'home')">
             <img src="img/logo_purple.png" alt="GUICHAR LPAM - Logo Accueil">
         </div>
 
         <div class="nav-links" id="navLinks">
             <ul>
-                <li><a href="#consulting" data-target="consulting" data-fr="Consulting" data-en="Consulting" onclick="toggleSubMenu(this, 'consulting')">Consulting</a></li>
-                <li><a href="#finance" data-target="finance" data-fr="Finance (LPAM)" data-en="Finance (LPAM)" onclick="toggleSubMenu(this, 'finance')">Finance (LPAM)</a></li>
+                <li><a href="#consulting" data-target="consulting" data-fr="Consulting" data-en="Consulting" onclick="handleNavClick(this, 'consulting')">Consulting</a></li>
+                <li><a href="#finance" data-target="finance" data-fr="Finance (LPAM)" data-en="Finance (LPAM)" onclick="handleNavClick(this, 'finance')">Finance (LPAM)</a></li>
                 
-                <li id="listed-item" class="sub-item hidden"><a href="#listed" data-target="listed" data-fr="Marchés Cotés" data-en="Listed Markets">Marchés Cotés</a></li>
-                <li id="private-item" class="sub-item hidden"><a href="#private" data-target="private" data-fr="Marchés Privés" data-en="Private Markets">Marchés Privés</a></li>
-                <li id="alternative-item" class="sub-item hidden"><a href="#alternative" data-target="alternative" data-fr="Alternative" data-en="Alternative">Alternative</a></li>
+                <li id="listed-item" class="sub-item hidden"><a href="#listed" data-target="listed" data-fr="Marchés Cotés" data-en="Listed Markets" onclick="handleNavClick(this, 'listed')">Marchés Cotés</a></li>
+                <li id="private-item" class="sub-item hidden"><a href="#private" data-target="private" data-fr="Marchés Privés" data-en="Private Markets" onclick="handleNavClick(this, 'private')">Marchés Privés</a></li>
+                <li id="alternative-item" class="sub-item hidden"><a href="#alternative" data-target="alternative" data-fr="Alternative" data-en="Alternative" onclick="handleNavClick(this, 'alternative')">Alternative</a></li>
                 
-                <li style="margin-top: 50px;"><a href="#contact" data-target="contact" data-fr="Contact" data-en="Contact">Contact</a></li>
+                <li style="margin-top: 50px;"><a href="#contact" data-target="contact" data-fr="Contact" data-en="Contact" onclick="handleNavClick(this, 'contact')">Contact</a></li>
             </ul>
         </div>
 
@@ -461,43 +461,45 @@
             document.getElementById('alternative-item')
         ];
         
-        // Initialisation de l'état du sous-menu
         let subMenuVisible = false;
 
         // -----------------------------------------------------------------------
         // 1. GESTION DU SCROLL ET NAVIGATION
         // -----------------------------------------------------------------------
-
-        function scrollToSection(id, isLogoClick = false) {
-            const section = document.getElementById(id);
-            if (section) {
-                // Défilement horizontal
-                const targetPosition = section.offsetLeft;
-                scrollContainer.scroll({ left: targetPosition, behavior: 'smooth' });
+        
+        // Fonction unique pour gérer tous les clics du menu
+        function handleNavClick(clickedLink, sectionId) {
+            // Empêche le comportement par défaut si l'appel vient d'un lien
+            if (clickedLink) {
+                event.preventDefault();
             }
-            // Si c'est un clic sur le logo ou la section Consulting, on cache les sous-menus
-            if (isLogoClick || id === 'consulting') {
-                hideSubMenu();
-            }
-        }
 
-        function toggleSubMenu(clickedLink, sectionId) {
+            // 1. Défilement vers la section
             scrollToSection(sectionId);
-            
-            // On ne gère le sous-menu que si c'est le lien "Finance"
+
+            // 2. Gestion dynamique du sous-menu Finance
             if (sectionId === 'finance') {
                 if (!subMenuVisible) {
                     showSubMenu();
                 } else {
-                    // Si on est déjà sur Finance, cliquer à nouveau cache le sous-menu
+                    // Si on clique sur Finance alors qu'il est déjà ouvert, on le cache
                     hideSubMenu();
-                    scrollToSection('home', true); // On ramène à l'accueil
                 }
-            } else {
+            } else if (sectionId === 'consulting' || sectionId === 'home' || sectionId === 'contact') {
+                // Si on clique sur Consulting, Home ou Contact, on cache le sous-menu
                 hideSubMenu();
             }
         }
 
+        // Fonction de défilement vers la section cible
+        function scrollToSection(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                const targetPosition = section.offsetLeft;
+                scrollContainer.scroll({ left: targetPosition, behavior: 'smooth' });
+            }
+        }
+        
         function showSubMenu() {
             subMenuItems.forEach(item => item.classList.remove('hidden'));
             subMenuVisible = true;
@@ -507,22 +509,6 @@
             subMenuItems.forEach(item => item.classList.add('hidden'));
             subMenuVisible = false;
         }
-        
-        // Ajout de l'événement de clic au logo pour revenir à l'accueil
-        document.querySelector('.logo-container').addEventListener('click', () => {
-             scrollToSection('home', true);
-             // On s'assure que le menu Home est actif visuellement (non géré par l'observer)
-             navLinks.forEach(link => link.classList.remove('active'));
-        });
-        
-        // Mise à jour des liens pour utiliser la nouvelle fonction de scroll
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.onclick = (e) => {
-                e.preventDefault();
-                // La fonction toggleSubMenu gère déjà le scroll et le menu
-            };
-        });
-
 
         // SCROLL HORIZONTAL (Desktop uniquement)
         scrollContainer.addEventListener("wheel", (evt) => {
@@ -546,28 +532,23 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
+                    const activeTarget = entry.target.id;
+
+                    // 1. Nettoyer les statuts actifs des liens
                     navLinks.forEach(link => link.classList.remove('active'));
-                    // On gère les liens principaux et les sous-menus
-                    let activeTarget = entry.target.id;
-                    let activeLink = document.querySelector(`.nav-links a[href="#${activeTarget}"]`);
                     
+                    // 2. Activer le lien correspondant à la section
+                    const activeLink = document.querySelector(`.nav-links a[href="#${activeTarget}"]`);
                     if(activeLink) activeLink.classList.add('active');
                     
-                    // Si on est dans une des sections financières, on garde "Finance (LPAM)" actif aussi et on montre le sous-menu
+                    // 3. Gestion de l'état du sous-menu et du lien "Finance"
                     if (['listed', 'private', 'alternative'].includes(activeTarget)) {
+                        // Si dans une sous-section, on active le lien principal "Finance" et on montre le sous-menu
                         document.querySelector('.nav-links a[href="#finance"]').classList.add('active');
                         showSubMenu();
-                    }
-                    
-                    // Si on est sur Home ou Consulting, on cache le sous-menu
-                    if (['home', 'consulting', 'contact'].includes(activeTarget)) {
+                    } else if (['home', 'consulting', 'contact'].includes(activeTarget)) {
+                        // Si sur Home, Consulting ou Contact, on cache le sous-menu
                         hideSubMenu();
-                    }
-
-                    // On gère l'accueil séparément car il n'a pas de lien dans le menu
-                    if (activeTarget === 'home') {
-                        document.querySelector('.nav-links a[href="#consulting"]').classList.remove('active');
-                        document.querySelector('.nav-links a[href="#finance"]').classList.remove('active');
                     }
                 }
             });
@@ -610,5 +591,6 @@
         hideSubMenu();
         setLanguage('fr');
     </script>
+    
 </body>
 </html>
