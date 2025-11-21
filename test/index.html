@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUICHAR LPAM | Strategy & Financial Management</title>
+    <style>
+        /* --- RESET & BASE --- */
+        :root {
+            --bg-color: #0f0f13; /* Anthracite très sombre */
+            --text-color: #e0e0e0;
+            --primary-purple: #6a0dad; /* Pourpre profond */
+            --accent-parme: #cfaaf0; /* Parme doux */
+            --gold: #bf9b30; /* Touche dorée discrète pour le prestige */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border_box; }
+        
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Georgia', 'Times New Roman', serif; /* Évocation classique */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(15, 15, 19, 0.95);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid #333;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-parme);
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--accent-parme); }
+        .lang-switch { border: 1px solid var(--accent-parme); padding: 5px 10px; border-radius: 2px; }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle at center, #2a1a35 0%, var(--bg-color) 70%);
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--accent-parme), var(--primary-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .motto {
+            font-style: italic;
+            color: var(--gold);
+            margin-top: 20px;
+            font-family: 'Georgia', serif;
+            font-size: 1.1rem;
+            border-top: 1px solid var(--gold);
+            border-bottom: 1px solid var(--gold);
+            padding: 10px 20px;
+        }
+
+        /* --- HFG SECTION --- */
+        .hfg-section {
+            background-color: #16161b;
+            padding: 80px 50px;
+            text-align: center;
+            border-left: 4px solid var(--primary-purple);
+        }
+
+        .hfg-section h2 { font-size: 2rem; margin-bottom: 20px; color: var(--accent-parme); }
+        .hfg-section p { max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
+        .hfg-motto { margin-top: 20px; color: #888; font-size: 0.9rem; letter-spacing: 1px; }
+
+        /* --- EXPERTISE SECTION --- */
+        .expertise { padding: 100px 50px; }
+        .section-title { text-align: center; margin-bottom: 60px; font-size: 2.5rem; color: var(--text-color); }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: #1a1a20;
+            padding: 40px;
+            border-radius: 4px;
+            border-top: 3px solid var(--primary-purple);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(106, 13, 173, 0.2);
+        }
+
+        .card h3 { color: var(--accent-parme); margin-bottom: 20px; font-size: 1.5rem; }
+        
+        .card ul { list-style: none; }
+        .card li {
+            margin-bottom: 10px;
+            padding-left: 15px;
+            position: relative;
+            color: #ccc;
+        }
+        .card li::before {
+            content: "►";
+            position: absolute;
+            left: 0;
+            font-size: 0.7rem;
+            color: var(--primary-purple);
+            top: 4px;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            padding: 50px;
+            text-align: center;
+            border-top: 1px solid #333;
+            font-size: 0.9rem;
+            color: #777;
+        }
+        
+        .contact-btn {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 30px;
+            border: 1px solid var(--accent-parme);
+            color: var(--accent-parme);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .contact-btn:hover { background: var(--accent-parme); color: var(--bg-color); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; } /* Simplification pour l'exemple */
+            .hfg-section, .expertise { padding: 60px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">GUICHAR LPAM</div>
+        <div class="nav-links">
+            <a href="#expertise">Expertise</a>
+            <a href="#hfg">Partenaire</a>
+            <a href="#contact">Contact</a>
+            <a href="#" class="lang-switch">EN</a>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <h1>GUICHAR LPAM</h1>
+        <div class="subtitle">Conseil en Stratégie & Gestion Financière</div>
+        <div class="motto">"Ultima Arx, Consilium Sapientis"</div>
+    </section>
+
+    <section id="hfg" class="hfg-section">
+        <h2>Mandat Exclusif</h2>
+        <p>
+            Agissant en qualité de bras armé stratégique pour <strong>HFG Capital</strong>, 
+            nous assurons l'exécution opérationnelle et le conseil tactique pour la préservation et la croissance des actifs.
+        </p>
+        <div class="hfg-motto">
+            POUR HFG CAPITAL : "PATRIMONIUM CUSTODIRE, AUGERE ET TRADERE"
+        </div>
+    </section>
+
+    <section id="expertise" class="expertise">
+        <h2 class="section-title">Domaines d'Expertise</h2>
+        
+        <div class="grid-container">
+            
+            <div class="card">
+                <h3>I. Listed Markets</h3>
+                <ul>
+                    <li>Contrats de Capitalisation</li>
+                    <li>Actions (Equities)</li>
+                    <li>Obligations (Bonds)</li>
+                    <li>Allocation d'actifs liquidités</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>II. Private Markets</h3>
+                <ul>
+                    <li>Private Equity</li>
+                    <li>Venture Capital</li>
+                    <li>Marché Secondaire</li>
+                    <li>Private Debt</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>III. Alternative Markets</h3>
+                <ul>
+                    <li>SCPI (Immobilier Pierre-Papier)</li>
+                    <li>Crowdlending</li>
+                    <li>Crypto-actifs & Blockchain</li>
+                    <li>Infrastructures & Actifs Réels</li>
+                </ul>
+            </div>
+
+        </div>
+    </section>
+
+    <footer id="contact">
+        <p>GUICHAR LPAM — Paris, France</p>
+        <a href="mailto:contact@guichar-lpam.com" class="contact-btn">Prendre contact</a>
+        <br><br>
+        <p>&copy; 2024 GUICHAR LPAM. Tous droits réservés.</p>
+    </footer>
+
+</body>
+</html>
