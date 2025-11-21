@@ -4,259 +4,401 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GUICHAR LPAM | Strategy & Financial Management</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- RESET & BASE --- */
+        /* --- VARIABLES & RESET --- */
         :root {
-            --bg-color: #0f0f13; /* Anthracite très sombre */
-            --text-color: #e0e0e0;
-            --primary-purple: #6a0dad; /* Pourpre profond */
-            --accent-parme: #cfaaf0; /* Parme doux */
-            --gold: #bf9b30; /* Touche dorée discrète pour le prestige */
+            /* Couleur exacte piochée dans votre logo */
+            --brand-purple: #570B36; 
+            /* Une version plus claire pour les accents */
+            --accent-parme: #a85f88; 
+            --bg-dark: #08080a;
+            --bg-card: #121216;
+            --text-light: #eef0f2;
+            --text-muted: #a0a0a0;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border_box; }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.7;
             overflow-x: hidden;
         }
 
-        h1, h2, h3 {
-            font-family: 'Georgia', 'Times New Roman', serif; /* Évocation classique */
+        /* Typographie imposante */
+        h1, h2, h3, .cinzel-font {
+            font-family: 'Cinzel', serif;
             text-transform: uppercase;
             letter-spacing: 2px;
+            font-weight: 700;
         }
+
+        /* Gestion du bilingue : on cache l'anglais par défaut */
+        [lang="en"] { display: none; }
+        body.english-mode [lang="fr"] { display: none; }
+        body.english-mode [lang="en"] { display: inline; }
+        body.english-mode div[lang="en"] { display: block; }
+
 
         /* --- NAVIGATION --- */
         nav {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 50px;
-            background: rgba(15, 15, 19, 0.95);
+            padding: 20px 40px;
+            background: rgba(8, 8, 10, 0.8);
+            backdrop-filter: blur(10px);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid rgba(87, 11, 54, 0.3);
         }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--accent-parme);
-        }
+        .nav-logo img { height: 40px; width: auto; }
 
+        .nav-links { display: flex; align-items: center; gap: 30px; }
         .nav-links a {
-            color: var(--text-color);
+            color: var(--text-light);
             text-decoration: none;
-            margin-left: 30px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             transition: color 0.3s;
+            font-weight: 600;
         }
-
         .nav-links a:hover { color: var(--accent-parme); }
-        .lang-switch { border: 1px solid var(--accent-parme); padding: 5px 10px; border-radius: 2px; }
 
-        /* --- HERO SECTION --- */
+        .lang-btn {
+            background: transparent;
+            border: 1px solid var(--accent-parme);
+            color: var(--accent-parme);
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+        .lang-btn:hover { background: var(--accent-parme); color: var(--bg-dark); }
+
+
+        /* --- HERO SECTION (VIDEO BG) --- */
         .hero {
             height: 100vh;
+            position: relative;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            background: radial-gradient(circle at center, #2a1a35 0%, var(--bg-color) 70%);
             padding: 0 20px;
+            overflow: hidden;
         }
 
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            background: linear-gradient(to right, var(--accent-parme), var(--primary-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* Placeholder pour la vidéo d'arrière-plan */
+        .video-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            opacity: 0.4;
+            /* REMPLACEZ CECI PAR VOTRE BALISE VIDEO SI VOUS EN AVEZ UNE */
+            background: linear-gradient(45deg, #1a0513, #08080a);
+        }
+        
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-dark) 90%);
+            z-index: -1;
         }
 
-        .hero .subtitle {
-            font-size: 1.2rem;
-            color: var(--text-color);
-            margin-bottom: 30px;
-            font-weight: 300;
+        .main-logo {
+            max-width: 300px;
+            width: 80%;
+            margin-bottom: 40px;
         }
 
         .motto {
-            font-style: italic;
-            color: var(--gold);
+            font-size: 1.2rem;
+            color: var(--accent-parme);
             margin-top: 20px;
-            font-family: 'Georgia', serif;
-            font-size: 1.1rem;
-            border-top: 1px solid var(--gold);
-            border-bottom: 1px solid var(--gold);
-            padding: 10px 20px;
+            padding: 10px 30px;
+            border-top: 2px solid var(--brand-purple);
+            border-bottom: 2px solid var(--brand-purple);
         }
 
-        /* --- HFG SECTION --- */
+
+        /* --- PARTNER SECTION (HFG) --- */
         .hfg-section {
-            background-color: #16161b;
-            padding: 80px 50px;
+            background-color: var(--brand-purple);
+            /* Dégradé subtil pour donner de la profondeur */
+            background: linear-gradient(to right, #3a0624, var(--brand-purple));
+            padding: 100px 50px;
             text-align: center;
-            border-left: 4px solid var(--primary-purple);
+            color: var(--text-light);
         }
 
-        .hfg-section h2 { font-size: 2rem; margin-bottom: 20px; color: var(--accent-parme); }
-        .hfg-section p { max-width: 800px; margin: 0 auto; font-size: 1.1rem; }
-        .hfg-motto { margin-top: 20px; color: #888; font-size: 0.9rem; letter-spacing: 1px; }
+        .hfg-content { max-width: 800px; margin: 0 auto; }
+        .hfg-content h2 { color: var(--accent-parme); margin-bottom: 30px; font-size: 2rem; }
+        .hfg-content p { font-size: 1.2rem; font-weight: 300; }
+        .hfg-motto-ref { margin-top: 40px; font-size: 0.9rem; color: rgba(255,255,255,0.6); }
 
-        /* --- EXPERTISE SECTION --- */
-        .expertise { padding: 100px 50px; }
-        .section-title { text-align: center; margin-bottom: 60px; font-size: 2.5rem; color: var(--text-color); }
-        
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+        /* --- EXPERTISE SECTION (HORIZONTAL SCROLL) --- */
+        .expertise-section {
+            padding: 120px 0;
+            background-color: var(--bg-dark);
+            overflow: hidden; /* Important pour masquer la scrollbar */
+        }
+
+        .section-header {
+            padding: 0 50px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        .section-header h2 { font-size: 2.5rem; color: var(--text-light); }
+
+        /* Conteneur du défilement horizontal */
+        .horizontal-scroll-container {
+            display: flex;
+            overflow-x: auto; /* Permet le scroll horizontal */
             gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
+            padding: 20px 5vw 60px 5vw; /* Padding latéral pour que les cartes ne collent pas aux bords */
+            
+            /* Magie du CSS pour un scroll qui s'arrête sur les éléments */
+            scroll-snap-type: x mandatory; 
+            
+            /* Masquer la barre de défilement */
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none;  /* IE and Edge */
         }
+        .horizontal-scroll-container::-webkit-scrollbar { display: none; /* Chrome, Safari, Opera */ }
 
-        .card {
-            background: #1a1a20;
+        /* Cartes d'expertise */
+        .expert-card {
+            /* Taille fixe pour les cartes, ne rétrécissent pas */
+            flex: 0 0 350px;
+            scroll-snap-align: center; /* La carte s'arrête au centre */
+            
+            background: var(--bg-card);
             padding: 40px;
-            border-radius: 4px;
-            border-top: 3px solid var(--primary-purple);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-radius: 8px;
+            border-bottom: 4px solid var(--brand-purple);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, border-color 0.3s ease;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(106, 13, 173, 0.2);
+        .expert-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent-parme);
         }
 
-        .card h3 { color: var(--accent-parme); margin-bottom: 20px; font-size: 1.5rem; }
-        
-        .card ul { list-style: none; }
-        .card li {
-            margin-bottom: 10px;
-            padding-left: 15px;
+        .expert-card h3 { color: var(--accent-parme); margin-bottom: 25px; font-size: 1.4rem; }
+        .expert-card ul { list-style: none; }
+        .expert-card li {
+            margin-bottom: 12px;
+            padding-left: 20px;
             position: relative;
-            color: #ccc;
+            color: var(--text-muted);
+            font-weight: 400;
         }
-        .card li::before {
-            content: "►";
-            position: absolute;
-            left: 0;
-            font-size: 0.7rem;
-            color: var(--primary-purple);
-            top: 4px;
+        .expert-card li::before {
+            content: "•";
+            position: absolute; left: 0; color: var(--brand-purple); font-size: 1.2rem; line-height: 1rem;
         }
+
 
         /* --- FOOTER --- */
         footer {
-            padding: 50px;
+            padding: 80px 50px;
             text-align: center;
-            border-top: 1px solid #333;
-            font-size: 0.9rem;
-            color: #777;
+            background: #050507;
+            border-top: 1px solid rgba(87, 11, 54, 0.2);
+            color: var(--text-muted);
         }
-        
-        .contact-btn {
-            display: inline-block;
-            margin-top: 30px;
-            padding: 15px 30px;
-            border: 1px solid var(--accent-parme);
-            color: var(--accent-parme);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s;
-        }
-        .contact-btn:hover { background: var(--accent-parme); color: var(--bg-color); }
+        .footer-logo { height: 30px; margin-bottom: 30px; opacity: 0.7; }
+        .contact-link { color: var(--accent-parme); text-decoration: none; border-bottom: 1px dotted var(--accent-parme); }
 
-        /* Responsive */
+        /* Responsive Adjustments */
         @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .nav-links { display: none; } /* Simplification pour l'exemple */
-            .hfg-section, .expertise { padding: 60px 20px; }
+            nav { padding: 15px 20px; }
+            .nav-logo img { height: 30px; }
+            .nav-links a:not(.lang-btn-container) { display: none; } /* On cache les liens sur mobile pour simplifier */
+            
+            .hero { padding-top: 60px; }
+            .main-logo { width: 90%; }
+            .hfg-section, .expertise-section { padding-left: 20px; padding-right: 20px; }
+            .hfg-content h2, .section-header h2 { font-size: 1.8rem; }
+            
+            /* Sur mobile, les cartes prennent plus de largeur */
+            .expert-card { flex: 0 0 80vw; }
         }
     </style>
 </head>
 <body>
 
     <nav>
-        <div class="logo">GUICHAR LPAM</div>
+        <a href="#" class="nav-logo">
+            <img src="/img/logo_purple.png" alt="GUICHAR LPAM Logo">
+        </a>
         <div class="nav-links">
+            <a href="#hfg"><span lang="fr">Partenaire</span><span lang="en">Partner</span></a>
             <a href="#expertise">Expertise</a>
-            <a href="#hfg">Partenaire</a>
-            <a href="#contact">Contact</a>
-            <a href="#" class="lang-switch">EN</a>
+            <div class="lang-btn-container">
+                <button id="langToggle" class="lang-btn">EN</button>
+            </div>
         </div>
     </nav>
 
     <section class="hero">
-        <h1>GUICHAR LPAM</h1>
-        <div class="subtitle">Conseil en Stratégie & Gestion Financière</div>
-        <div class="motto">"Ultima Arx, Consilium Sapientis"</div>
+        <div class="video-bg"></div> <div class="hero-overlay"></div>
+
+        <img src="/img/logo_purple.png" alt="GUICHAR LPAM" class="main-logo">
+        
+        <div class="cinzel-font motto">
+            "Ultima Arx, Consilium Sapientis"
+        </div>
+        <p style="margin-top: 20px; letter-spacing: 2px; color: var(--text-muted);">
+            <span lang="fr">Stratégie & Gestion Financière</span>
+            <span lang="en">Strategy & Financial Management</span>
+        </p>
     </section>
 
     <section id="hfg" class="hfg-section">
-        <h2>Mandat Exclusif</h2>
-        <p>
-            Agissant en qualité de bras armé stratégique pour <strong>HFG Capital</strong>, 
-            nous assurons l'exécution opérationnelle et le conseil tactique pour la préservation et la croissance des actifs.
-        </p>
-        <div class="hfg-motto">
-            POUR HFG CAPITAL : "PATRIMONIUM CUSTODIRE, AUGERE ET TRADERE"
+        <div class="hfg-content">
+            <h2>
+                <span lang="fr">Notre Rôle Stratégique</span>
+                <span lang="en">Our Strategic Role</span>
+            </h2>
+            <p lang="fr">
+                Intervenant en qualité de bras armé stratégique pour <strong>HFG Capital</strong>, 
+                nous assurons l'exécution opérationnelle et le conseil tactique pour la préservation et la croissance des actifs.
+            </p>
+            <p lang="en">
+                Acting as the strategic enforcement arm for <strong>HFG Capital</strong>, 
+                we ensure operational execution and tactical counsel for the preservation and growth of assets.
+            </p>
+            <div class="hfg-motto-ref cinzel-font">
+                HFG Capital : "Patrimonium custodire, augere et tradere"
+            </div>
         </div>
     </section>
 
-    <section id="expertise" class="expertise">
-        <h2 class="section-title">Domaines d'Expertise</h2>
+    <section id="expertise" class="expertise-section">
+        <div class="section-header">
+            <h2>Domaines d'Expertise</h2>
+        </div>
         
-        <div class="grid-container">
+        <div class="horizontal-scroll-container">
             
-            <div class="card">
+            <div class="expert-card">
                 <h3>I. Listed Markets</h3>
                 <ul>
-                    <li>Contrats de Capitalisation</li>
-                    <li>Actions (Equities)</li>
-                    <li>Obligations (Bonds)</li>
-                    <li>Allocation d'actifs liquidités</li>
+                    <li>
+                        <span lang="fr">Contrats de Capitalisation</span>
+                        <span lang="en">Capitalization Contracts</span>
+                    </li>
+                    <li>
+                        <span lang="fr">Actions (Equities)</span>
+                        <span lang="en">Equities</span>
+                    </li>
+                    <li>
+                        <span lang="fr">Obligations</span>
+                        <span lang="en">Fixed Income / Bonds</span>
+                    </li>
+                    <li>
+                        <span lang="fr">Allocation liquidités</span>
+                        <span lang="en">Liquidity Allocation</span>
+                    </li>
                 </ul>
             </div>
 
-            <div class="card">
+            <div class="expert-card">
                 <h3>II. Private Markets</h3>
                 <ul>
                     <li>Private Equity</li>
                     <li>Venture Capital</li>
-                    <li>Marché Secondaire</li>
+                    <li>
+                        <span lang="fr">Marché Secondaire</span>
+                        <span lang="en">Secondary Market</span>
+                    </li>
                     <li>Private Debt</li>
                 </ul>
             </div>
 
-            <div class="card">
+            <div class="expert-card">
                 <h3>III. Alternative Markets</h3>
                 <ul>
-                    <li>SCPI (Immobilier Pierre-Papier)</li>
+                    <li>SCPI (Real Estate Funds)</li>
                     <li>Crowdlending</li>
-                    <li>Crypto-actifs & Blockchain</li>
-                    <li>Infrastructures & Actifs Réels</li>
+                    <li>Crypto & Blockchain</li>
+                    <li>
+                        <span lang="fr">Infrastructures & Actifs Réels</span>
+                        <span lang="en">Infrastructure & Real Assets</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="expert-card" style="border-color: var(--accent-parme);">
+                <h3>IV. Strategic Advisory</h3>
+                <ul>
+                    <li>
+                        <span lang="fr">Allocation d'actifs globale</span>
+                        <span lang="en">Global Asset Allocation</span>
+                    </li>
+                    <li>
+                        <span lang="fr">Gestion des risques</span>
+                        <span lang="en">Risk Management</span>
+                    </li>
+                    <li>
+                        <span lang="fr">Reporting consolidé</span>
+                        <span lang="en">Consolidated Reporting</span>
+                    </li>
                 </ul>
             </div>
 
         </div>
     </section>
 
-    <footer id="contact">
-        <p>GUICHAR LPAM — Paris, France</p>
-        <a href="mailto:contact@guichar-lpam.com" class="contact-btn">Prendre contact</a>
-        <br><br>
-        <p>&copy; 2024 GUICHAR LPAM. Tous droits réservés.</p>
+    <footer>
+        <img src="/img/logo_purple.png" alt="GUICHAR LPAM" class="footer-logo">
+        <p>
+            <span lang="fr">Basé à Paris, France.</span>
+            <span lang="en">Based in Paris, France.</span>
+        </p>
+        <p style="margin-top: 15px;">
+            Contact: <a href="mailto:contact@guichar-lpam.com" class="contact-link">contact@guichar-lpam.com</a>
+        </p>
+        <br>
+        <p class="cinzel-font" style="font-size: 0.8rem; opacity: 0.5;">&copy; 2024 GUICHAR LPAM.</p>
     </footer>
+
+
+    <script>
+        const langToggleBtn = document.getElementById('langToggle');
+        const body = document.body;
+        let isEnglish = false;
+
+        langToggleBtn.addEventListener('click', () => {
+            isEnglish = !isEnglish;
+            
+            if (isEnglish) {
+                body.classList.add('english-mode');
+                langToggleBtn.textContent = 'FR';
+                document.documentElement.lang = 'en';
+            } else {
+                body.classList.remove('english-mode');
+                langToggleBtn.textContent = 'EN';
+                document.documentElement.lang = 'fr';
+            }
+        });
+    </script>
 
 </body>
 </html>
