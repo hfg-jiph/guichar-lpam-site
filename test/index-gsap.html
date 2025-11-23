@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUICHAR LPAM - Stratégie & Finance</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- VARIABLES & RESET --- */
+        :root {
+            --brand-purple: #6A0F49; 
+            --brand-purple-light: #962d6e;
+            --bg-dark: #050507;
+            --text-white: #ffffff;
+            --text-grey: #cfcfcf;
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --sidebar-width: 280px;
+            --font-main: 'Montserrat', sans-serif;
+            --content-width: 650px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-white);
+            font-family: var(--font-main);
+            overflow: hidden; 
+            height: 100vh;
+            width: 100vw;
+        }
+
+        /* --- BACKGROUND PARALLAX IMAGE --- */
+        .parallax-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 150vw;
+            height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1572190006810-a55bd7077c3b?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -3;
+            transition: transform 0.1s ease-out;
+            pointer-events: none;
+        }
+        
+        /* Calque par-dessus l'image, pour les voitures animées */
+        .traffic-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 150vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -2;
+            overflow: hidden;
+        }
+        
+        /* Une "voiture" vue du ciel : petit trait lumineux */
+        .car {
+            position: absolute;
+            width: 6px;
+            height: 16px;
+            border-radius: 999px;
+            background: #ffe9a8;
+            box-shadow: 0 0 12px rgba(255, 233, 168, 0.9);
+            opacity: 0.85;
+        }
+        
+        /* Voitures "retour" (autre sens, autre couleur) */
+        .car.back {
+            background: #8fb3ff;
+            box-shadow: 0 0 12px rgba(143, 179, 255, 0.9);
+            opacity: 0.7;
+        }
+
+
+        /* --- SIDEBAR (Transparence ajustée) --- */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100%;
+            background: rgba(5, 5, 7, 0.5); 
+            border-right: 1px solid var(--glass-border);
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container img {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 0 8px rgba(106, 15, 73, 0.4));
+            cursor: pointer; /* Indiquer que le logo est cliquable */
+        }
+        
+        .nav-links {
+            margin-top: 60px;
+            flex-grow: 1; /* Permet aux liens de prendre l'espace restant au centre */
+        }
+        .nav-links ul { 
+            list-style: none; 
+            padding: 0;
+        }
+        .nav-links li { 
+            margin-bottom: 30px; 
+            transition: opacity 0.3s;
+        }
+        
+        /* Styles spécifiques pour les sous-menus */
+        .nav-links li.sub-item {
+            padding-left: 20px;
+            font-size: 0.75rem; /* Rendre les sous-menus plus petits */
+            margin-bottom: 20px;
+        }
+        
+        .nav-links li.hidden {
+            display: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-grey);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+            display: inline-block;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--brand-purple);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover { color: var(--text-white); }
+        .nav-links a:hover::after { width: 100%; }
+        
+        .nav-links a.active { color: var(--text-white); }
+        .nav-links a.active::after { width: 100%; background-color: var(--brand-purple-light); }
+
+        .lang-switch {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .lang-btn { opacity: 0.4; transition: 0.3s; }
+        .lang-btn:hover { opacity: 0.8; }
+        .lang-btn.active { opacity: 1; color: var(--brand-purple-light); }
+
+        /* --- HORIZONTAL CONTAINER (Contenu) --- */
+        .scroll-container {
+            position: absolute;
+            left: var(--sidebar-width);
+            top: 0;
+            height: 100%;
+            width: calc(100vw - var(--sidebar-width));
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+        }
+        .scroll-container::-webkit-scrollbar { display: none; }
+
+        /* --- SECTIONS --- */
+        section {
+            min-width: 100%;
+            height: 100%;
+            padding: 0 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-right: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        /* TYPOGRAPHY et Listes (Styles inchangés) */
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 30px;
+            background: linear-gradient(to bottom right, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 3rem; 
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            color: var(--text-white);
+            margin-bottom: 10px;
+            border-left: 5px solid var(--brand-purple);
+            padding-left: 30px;
+        }
+        
+        h3 {
+             font-size: 1.5rem;
+             color: var(--brand-purple-light);
+             margin-top: 30px;
+             font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-grey);
+            max-width: var(--content-width);
+            line-height: 1.7;
+            margin-bottom: 50px;
+            font-weight: 300;
+        }
+
+        .motto {
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--brand-purple-light);
+            margin-top: 40px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .motto::before {
+            content: '';
+            width: 40px;
+            height: 2px;
+            background: var(--brand-purple);
+        }
+
+        .service-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px 40px;
+            max-width: var(--content-width);
+            margin-top: 30px;
+        }
+
+        .service-list li {
+            list-style: none;
+            color: var(--text-grey);
+            font-weight: 300;
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .service-list li::before {
+            content: '›';
+            position: absolute;
+            left: 0;
+            color: var(--brand-purple-light);
+            font-size: 1.2em;
+        }
+
+
+        /* --- RESPONSIVE MOBILE (Styles inchangés) --- */
+        @media (max-width: 1024px) {
+            body { overflow: auto; height: auto; }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: sticky;
+                flex-direction: row;
+                align-items: center;
+                padding: 15px 20px;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+                background: #050507;
+            }
+            .nav-links { display: none; }
+            .scroll-container {
+                position: relative;
+                left: 0;
+                width: 100%;
+                height: auto;
+                flex-direction: column;
+                overflow: visible;
+            }
+            section {
+                height: auto;
+                min-height: 80vh;
+                border-right: none;
+                border-bottom: 1px solid var(--glass-border);
+                padding: 60px 20px;
+            }
+            .parallax-bg { display: none; }
+            h1 { font-size: 2.8rem; }
+            h2 { font-size: 2.2rem; padding-left: 15px;}
+            .service-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="parallax-bg" id="bgImage"></div>
+    <div class="traffic-layer" id="trafficLayer"></div>
+
+
+    <nav class="sidebar">
+        <div class="logo-container" onclick="handleNavClick(null, 'home')">
+            <img src="img/logo_purple.png" alt="GUICHAR LPAM - Logo Accueil">
+        </div>
+
+        <div class="nav-links" id="navLinks">
+            <ul>
+                <li><a href="#consulting" data-target="consulting" data-fr="Conseil" data-en="Consulting" onclick="handleNavClick(this, 'consulting')">Conseil</a></li>
+                <li><a href="#finance" data-target="finance" data-fr="Investissement" data-en="Investments" onclick="handleNavClick(this, 'finance')">Investissement</a></li>
+                
+                <li id="listed-item" class="sub-item hidden"><a href="#listed" data-target="listed" data-fr="Marchés Cotés" data-en="Listed Markets" onclick="handleNavClick(this, 'listed')">Marchés Cotés</a></li>
+                <li id="private-item" class="sub-item hidden"><a href="#private" data-target="private" data-fr="Marchés Privés" data-en="Private Markets" onclick="handleNavClick(this, 'private')">Marchés Privés</a></li>
+                <li id="alternative-item" class="sub-item hidden"><a href="#alternative" data-target="alternative" data-fr="Alternative" data-en="Alternative" onclick="handleNavClick(this, 'alternative')">Alternative</a></li>
+                
+                <li style="margin-top: 50px;"><a href="#contact" data-target="contact" data-fr="Contact" data-en="Contact" onclick="handleNavClick(this, 'contact')">Contact</a></li>
+            </ul>
+        </div>
+
+        <div class="lang-switch">
+            <span class="lang-btn" id="langEnBtn" onclick="setLanguage('en')">EN</span>
+            <span style="opacity:0.2">/</span>
+            <span class="lang-btn active" id="langFrBtn" onclick="setLanguage('fr')">FR</span>
+        </div>
+    </nav>
+
+    <main class="scroll-container" id="mainScroll">
+        
+        <section id="home">
+            <h1 class="lang-en" style="display:none;">CEO Vision &<br>Multi-Asset Investment</h1>
+            <h1 class="lang-fr">Vision de Patron &<br>Investissement Multi-Actifs</h1>
+            
+            <p class="subtitle lang-en" style="display:none;">
+                GUICHAR LPAM, founded by an former CEO with a successful exit, offers a rare combination: strategic operational coaching for executives and rigorous, data-driven multi-market investment counsel.
+            </p>
+            <p class="subtitle lang-fr">
+                Fondé par un ancien CEO ayant mené son entreprise à une exit réussie, GUICHAR LPAM offre une combinaison rare : l'accompagnement stratégique et opérationnel des dirigeants, doublé d'un conseil en investissement multi-marchés rigoureux et "data-driven".
+            </p>
+
+            <div class="motto">
+                Ultima Arx, Consilium Sapientis
+            </div>
+        </section>
+
+        <section id="consulting">
+            <h2 class="lang-en" style="display:none;">Operational Optimization & CEO Coaching</h2>
+            <h2 class="lang-fr">Optimisation Opérationnelle & Accompagnement CEO</h2>
+            
+            <p class="subtitle lang-en" style="display:none;">
+                We act as a strategic sparring partner and operational architect. Our pragmatic approach focuses only on measurable results, avoiding "bullshit consulting."
+            </p>
+            <p class="subtitle lang-fr">
+                Nous intervenons comme un *sparring partner* stratégique pour le dirigeant et un architecte opérationnel pour l'entreprise. Notre approche pragmatique se concentre uniquement sur le concret et le mesurable.
+            </p>
+            
+            <h3><span class="lang-en" style="display:none;">Our Missions</span><span class="lang-fr">Nos Axes d'Intervention</span></h3>
+            <ul class="service-list">
+                <li class="lang-en" style="display:none;">Process & Team Organization (Production, Quality, Logistics)</li>
+                <li class="lang-fr">Optimisation des Processus (Production, Qualité, Logistique, RH)</li>
+                <li class="lang-en" style="display:none;">Commercial Strategy (Pricing, KPI, Conversion, Pipeline)</li>
+                <li class="lang-fr">Optimisation Commerciale (Pricing, KPI, Pipeline, Taux de Conversion)</li>
+                <li class="lang-en" style="display:none;">Financial Structuring (Budget, Cash Management, P&L monitoring)</li>
+                <li class="lang-fr">Structuration Financière (Budget, Cash Management, Pilotage P&L)</li>
+                <li class="lang-en" style="display:none;">CEO Support (Strategic Arbitrations, High-level decisions, Time Management)</li>
+                <li class="lang-fr">Accompagnement du Dirigeant (Arbitrages Stratégiques, Décisions Haut de Bilan)</li>
+            </ul>
+        </section>
+
+        <section id="finance">
+            <h2 class="lang-en" style="display:none;">Investment Activity (LPAM)</h2>
+            <h2 class="lang-fr">Activité d'Investissement (LPAM)</h2>
+            
+            <p class="subtitle lang-en" style="display:none;">
+                We analyze and invest across three major asset classes with a single objective: generating stable, risk-controlled, long-term performance for demanding investors.
+            </p>
+            <p class="subtitle lang-fr">
+                Nous analysons et investissons sur trois grandes classes d'actifs avec un objectif unique : générer une performance stable, pérenne et sous contrôle du risque pour une clientèle exigeante.
+            </p>
+            
+            <h3>LPAM: Listed, Private & Alternative Markets</h3>
+            <p class="subtitle lang-en" style="display:none; margin-top:20px;">
+                Click on the links in the navigation bar to explore our expertise in each of the three markets.
+            </p>
+             <p class="subtitle lang-fr" style="margin-top:20px;">
+                Cliquez sur les liens dans la barre de navigation pour explorer notre expertise sur chacun des trois marchés.
+            </p>
+        </section>
+
+
+        <section id="listed">
+            <h2 class="lang-en" style="display:none;">Listed Markets</h2>
+            <h2 class="lang-fr">Marchés Cotés</h2>
+            
+            <p class="subtitle lang-en" style="display:none;">Dynamic allocation in response to macro cycles and risks.</p>
+            <p class="subtitle lang-fr">Allocation dynamique en fonction des cycles macro et des risques.</p>
+
+            <ul class="service-list">
+                <li class="lang-en" style="display:none;">Equities (Europe focus)</li>
+                <li class="lang-fr">Actions (principalement Europe)</li>
+                <li class="lang-en" style="display:none;">Government & Corporate Bonds</li>
+                <li class="lang-fr">Obligations d’État et Corporate</li>
+                <li class="lang-en" style="display:none;">Dated Funds / Bonds to maturity</li>
+                <li class="lang-fr">Fonds Datés / Obligations à Maturité</li>
+            </ul>
+        </section>
+
+        <section id="private">
+            <h2 class="lang-en" style="display:none;">Private Markets</h2>
+            <h2 class="lang-fr">Marchés Privés</h2>
+            
+            <p class="subtitle lang-en" style="display:none;">Access to long-term performance drivers and institutional diversification.</p>
+            <p class="subtitle lang-fr">Accès aux moteurs de performance long terme et diversification institutionnelle.</p>
+
+            <ul class="service-list">
+                <li class="lang-en" style="display:none;">Private Equity (Buyout, Growth)</li>
+                <li class="lang-fr">Private Equity (Buyout, Growth)</li>
+                <li class="lang-en" style="display:none;">Venture Capital</li>
+                <li class="lang-fr">Venture Capital</li>
+                <li class="lang-en" style="display:none;">Private Debt (Senior, Unitranche, Opportunistic)</li>
+                <li class="lang-fr">Private Debt (Senior, Unitranche, Opportunistic)</li>
+                <li class="lang-en" style="display:none;">Secondary Market Transactions</li>
+                <li class="lang-fr">Transactions sur Marché Secondaire</li>
+            </ul>
+        </section>
+
+        <section id="alternative">
+            <h2 class="lang-en" style="display:none;">Alternative Markets</h2>
+            <h2 class="lang-fr">Marchés Alternatifs</h2>
+            
+            <p class="subtitle lang-en" style="display:none;">Capturing uncorrelated returns and identifying asymmetric opportunities.</p>
+            <p class="subtitle lang-fr">Capturer des rendements non corrélés et identifier des opportunités asymétriques.</p>
+
+            <ul class="service-list">
+                <li class="lang-en" style="display:none;">Paper Real Estate (SCPI)</li>
+                <li class="lang-fr">Immobilier Papier (SCPI)</li>
+                <li class="lang-en" style="display:none;">Crowdlending & Real Estate Financing</li>
+                <li class="lang-fr">Crowdlending & Financement Immobilier</li>
+                <li class="lang-en" style="display:none;">Crypto & Blockchain (Macro analysis + Portfolio management)</li>
+                <li class="lang-fr">Crypto & Blockchain (Analyse Macro + Gestion de Portefeuille)</li>
+            </ul>
+        </section>
+        
+        <section id="contact">
+            <h2 class="lang-en" style="display:none;">Contact</h2>
+            <h2 class="lang-fr">Contact</h2>
+            
+            <div class="contact-box">
+                <p style="color:white; font-weight:300;">GUICHAR LPAM</p>
+                <p style="color:gray; margin-bottom:20px;">Paris, France</p>
+                <a href="mailto:contact@guichar-lpam.com" class="contact-email">contact@guichar-lpam.com</a>
+            </div>
+            
+            <div style="margin-top: 60px; font-size: 0.75rem; color: #555;">
+                &copy; 2025 GUICHAR LPAM. All rights reserved.
+            </div>
+        </section>
+    </main>
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <script>
+        const scrollContainer = document.getElementById("mainScroll");
+        const bgImage = document.getElementById("bgImage");
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const sections = document.querySelectorAll('section');
+        const langFrBtn = document.getElementById('langFrBtn');
+        const langEnBtn = document.getElementById('langEnBtn');
+        const trafficLayer = document.getElementById("trafficLayer");
+
+        
+        // Sous-menus à gérer
+        const subMenuItems = [
+            document.getElementById('listed-item'),
+            document.getElementById('private-item'),
+            document.getElementById('alternative-item')
+        ];
+        
+        let subMenuVisible = false;
+
+        // -----------------------------------------------------------------------
+        // 1. GESTION DU SCROLL ET NAVIGATION
+        // -----------------------------------------------------------------------
+        
+        // Fonction unique pour gérer tous les clics du menu
+        function handleNavClick(clickedLink, sectionId) {
+            // Empêche le comportement par défaut si l'appel vient d'un lien
+            if (clickedLink) {
+                event.preventDefault();
+            }
+
+            // 1. Défilement vers la section
+            scrollToSection(sectionId);
+
+            // 2. Gestion dynamique du sous-menu Finance
+            if (sectionId === 'finance') {
+                if (!subMenuVisible) {
+                    showSubMenu();
+                } else {
+                    // Si on clique sur Finance alors qu'il est déjà ouvert, on le cache
+                    hideSubMenu();
+                }
+            } else if (sectionId === 'consulting' || sectionId === 'home' || sectionId === 'contact') {
+                // Si on clique sur Consulting, Home ou Contact, on cache le sous-menu
+                hideSubMenu();
+            }
+        }
+
+        // Fonction de défilement vers la section cible
+        function scrollToSection(id) {
+            const section = document.getElementById(id);
+            if (section) {
+                const targetPosition = section.offsetLeft;
+                scrollContainer.scroll({ left: targetPosition, behavior: 'smooth' });
+            }
+        }
+        
+        function showSubMenu() {
+            subMenuItems.forEach(item => item.classList.remove('hidden'));
+            subMenuVisible = true;
+        }
+
+        function hideSubMenu() {
+            subMenuItems.forEach(item => item.classList.add('hidden'));
+            subMenuVisible = false;
+        }
+
+        // -----------------------------------------------------------------------
+        // ANIMATION DE FOND AVEC GSAP : "VOITURES" VUES DU CIEL
+        // -----------------------------------------------------------------------
+        
+        function initTraffic() {
+            if (!trafficLayer) return;
+        
+            const NUM_CARS = 40;  // nombre de voitures
+            const w = window.innerWidth * 1.5;  // même logique que 150vw
+            const h = window.innerHeight;
+        
+            // Quelques "voies" horizontales (comme des boulevards vus de haut)
+            const lanes = [
+                h * 0.30,
+                h * 0.38,
+                h * 0.46,
+                h * 0.58,
+                h * 0.66
+            ];
+        
+            function createCar(reverse = false) {
+                const car = document.createElement('div');
+                car.classList.add('car');
+                if (reverse) car.classList.add('back');
+                trafficLayer.appendChild(car);
+        
+                const laneY = gsap.utils.random(lanes); // choisit une voie
+                const startX = reverse ? w + 80 : -80;
+                const endX   = reverse ? -120 : w + 120;
+                const duration = gsap.utils.random(10, 22);
+        
+                // Position de départ
+                gsap.set(car, {
+                    x: gsap.utils.random(startX - 200, startX + 200),
+                    y: laneY + gsap.utils.random(-4, 4),
+                    scaleY: gsap.utils.random(0.8, 1.4),
+                    opacity: gsap.utils.random(0.3, 0.9)
+                });
+        
+                // Animation linéaire, en boucle
+                gsap.to(car, {
+                    x: endX,
+                    duration: duration,
+                    ease: "none",
+                    repeat: -1,
+                    delay: gsap.utils.random(0, duration)
+                });
+            }
+        
+            for (let i = 0; i < NUM_CARS; i++) {
+                // Un coup dans un sens, un coup dans l'autre
+                createCar(i % 2 === 0);
+                createCar(true);
+            }
+        }
+        
+        // Lancer l'animation une fois que tout est prêt
+        initTraffic();
+        window.addEventListener('resize', () => {
+            // Option simple : on vide et on relance si tu veux qu'il s'adapte au resize
+            if (!trafficLayer) return;
+            trafficLayer.innerHTML = '';
+            initTraffic();
+        });
+
+      
+        // SCROLL HORIZONTAL (Desktop uniquement)
+        scrollContainer.addEventListener("wheel", (evt) => {
+            if(window.innerWidth > 1024) {
+                evt.preventDefault();
+                scrollContainer.scrollLeft += evt.deltaY;
+            }
+        });
+
+        // EFFET PARALLAXE
+        scrollContainer.addEventListener("scroll", () => {
+            if (window.innerWidth > 1024) {
+                let x = scrollContainer.scrollLeft;
+                bgImage.style.transform = `translateX(${-x * 0.10}px)`;
+                if (trafficLayer) {
+                    trafficLayer.style.transform = `translateX(${-x * 0.12}px)`;
+                }
+            }
+        });
+
+
+        // NAVIGATION ACTIVE (Observer)
+        const observerOptions = { root: scrollContainer, threshold: 0.5 };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const activeTarget = entry.target.id;
+
+                    // 1. Nettoyer les statuts actifs des liens
+                    navLinks.forEach(link => link.classList.remove('active'));
+                    
+                    // 2. Activer le lien correspondant à la section
+                    const activeLink = document.querySelector(`.nav-links a[href="#${activeTarget}"]`);
+                    if(activeLink) activeLink.classList.add('active');
+                    
+                    // 3. Gestion de l'état du sous-menu et du lien "Finance"
+                    if (['listed', 'private', 'alternative'].includes(activeTarget)) {
+                        // Si dans une sous-section, on active le lien principal "Finance" et on montre le sous-menu
+                        document.querySelector('.nav-links a[href="#finance"]').classList.add('active');
+                        showSubMenu();
+                    } else if (['home', 'consulting', 'contact'].includes(activeTarget)) {
+                        // Si sur Home, Consulting ou Contact, on cache le sous-menu
+                        hideSubMenu();
+                    }
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+        
+        
+        // -----------------------------------------------------------------------
+        // 2. GESTION DES LANGUES (Traduction du menu incluse)
+        // -----------------------------------------------------------------------
+
+        function setLanguage(lang) {
+            const isFr = (lang === 'fr');
+            
+            // Traduction des liens de navigation
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                const frText = link.getAttribute('data-fr');
+                const enText = link.getAttribute('data-en');
+                link.textContent = isFr ? frText : enText;
+            });
+            
+            // Visibilité du contenu des sections
+            document.querySelectorAll('.lang-en').forEach(el => el.style.display = isFr ? 'none' : 'block');
+            document.querySelectorAll('.lang-fr').forEach(el => el.style.display = isFr ? 'block' : 'none');
+
+            // Visibilité des boutons de langue
+            langEnBtn.classList.remove('active');
+            langFrBtn.classList.remove('active');
+            if (isFr) {
+                langFrBtn.classList.add('active');
+                document.documentElement.lang = 'fr';
+            } else {
+                langEnBtn.classList.add('active');
+                document.documentElement.lang = 'en';
+            }
+        }
+        
+        // Initialisation en Français et masquage initial du sous-menu
+        hideSubMenu();
+        setLanguage('fr');
+    </script>
+    
+</body>
+</html>
