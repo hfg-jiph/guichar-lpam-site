@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>GUICHAR LPAM | Audit. Architect. Amplify.</title>
+  <meta name="description" content="Cabinet de conseil et d'investissement nouvelle génération : optimisation opérationnelle & stratégie multi-actifs." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Mono:wght@300;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-main: #050811;
+      --bg-alt: #05050c;
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --primary: #22d3ee;  /* cyan */
+      --secondary: #a855ff; /* violet */
+      --accent-gold: #fbbf24;
+      --border-subtle: rgba(148, 163, 184, 0.25);
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --blur-bg: blur(18px);
+      --radius-lg: 18px;
+      --radius-xl: 26px;
+      --shadow-soft: 0 24px 60px rgba(15, 23, 42, 0.75);
+      --nav-height: 72px;
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.3s ease-out;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      background: radial-gradient(circle at top, #020617 0, #020617 40%, #020617 60%, #000 100%);
+      color: var(--text-main);
+      font-family: 'Space Grotesk', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ===== Glowing background network ===== */
+    .bg-orbit {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(56,189,248,0.14), transparent 60%),
+        radial-gradient(circle at 80% 10%, rgba(168,85,247,0.13), transparent 55%),
+        radial-gradient(circle at 15% 80%, rgba(251,191,36,0.10), transparent 60%);
+      mix-blend-mode: screen;
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(to right, rgba(148,163,184,0.14) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(148,163,184,0.14) 1px, transparent 1px);
+      background-size: 80px 80px;
+      opacity: 0.18;
+      mask-image: radial-gradient(circle at center, black 0, transparent 75%);
+      z-index: -1;
+      animation: gridShift 20s linear infinite;
+    }
+
+    @keyframes gridShift {
+      0% { transform: translate3d(0,0,0); }
+      50% { transform: translate3d(-20px, -10px, 0); }
+      100% { transform: translate3d(0,0,0); }
+    }
+
+    /* ===== Layout ===== */
+    .wrapper {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ===== Header / Nav ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(15,23,42,0.90), rgba(15,23,42,0.70), transparent);
+      border-bottom: 1px solid rgba(148,163,184,0.25);
+    }
+
+    .nav {
+      height: var(--nav-height);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.6);
+      background:
+        radial-gradient(circle at 30% 20%, rgba(56,189,248,0.9), transparent 60%),
+        radial-gradient(circle at 70% 80%, rgba(168,85,247,0.8), transparent 60%);
+      box-shadow:
+        0 0 18px rgba(56,189,248,0.7),
+        0 0 32px rgba(168,85,247,0.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-logo::after {
+      content: "";
+      position: absolute;
+      inset: 30%;
+      border-radius: inherit;
+      border: 1px solid rgba(15,23,42,0.8);
+      opacity: 0.7;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+
+    .brand-title {
+      font-size: 0.95rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .brand-sub {
+      font-size: 0.7rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    nav ul {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      list-style: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--text-muted);
+      position: relative;
+      padding-block: 4px;
+      transition: color var(--transition-fast);
+    }
+
+    nav a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -3px;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      transition: width var(--transition-fast);
+    }
+
+    nav a:hover {
+      color: var(--text-main);
+    }
+
+    nav a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.6);
+      background: radial-gradient(circle at top left, rgba(56,189,248,0.22), transparent 60%);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      transition: border var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-med);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-main);
+    }
+
+    .nav-cta span.arrow {
+      font-family: "DM Mono", monospace;
+      font-size: 0.8rem;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      border-color: rgba(168,85,247,0.7);
+      box-shadow: 0 12px 28px rgba(15,23,42,0.85);
+      background: radial-gradient(circle at top left, rgba(168,85,247,0.28), transparent 60%);
+    }
+
+    /* Mobile nav simplifié */
+    .nav-toggle {
+      display: none;
+      border: none;
+      background: transparent;
+      color: var(--text-main);
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        display: none;
+      }
+      .nav-toggle {
+        display: block;
+      }
+      .nav.open ul {
+        display: flex;
+        position: absolute;
+        top: var(--nav-height);
+        right: 16px;
+        flex-direction: column;
+        padding: 12px 16px;
+        background: rgba(15,23,42,0.98);
+        border-radius: 16px;
+        border: 1px solid rgba(148,163,184,0.35);
+        box-shadow: var(--shadow-soft);
+        gap: 12px;
+        min-width: 210px;
+      }
+      .nav.open ul li {
+        text-align: right;
+      }
+    }
+
+    /* ===== Hero ===== */
+    .hero {
+      padding-top: 40px;
+      padding-bottom: 72px;
+    }
+
+    .hero-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
+      gap: 48px;
+      align-items: center;
+    }
+
+    @media (max-width: 960px) {
+      .hero-inner {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 36px;
+      }
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to right, rgba(15,23,42,0.85), rgba(15,23,42,0.65));
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: radial-gradient(circle at center, var(--primary) 0, transparent 70%);
+      box-shadow: 0 0 14px rgba(56,189,248,0.9);
+    }
+
+    .hero-title {
+      margin-top: 18px;
+      font-size: clamp(2.4rem, 4vw, 3.2rem);
+      line-height: 1.05;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .hero-title span.highlight {
+      background: linear-gradient(120deg, var(--primary), var(--secondary), var(--accent-gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      margin-top: 12px;
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      max-width: 32rem;
+    }
+
+    .hero-subtitle strong {
+      color: var(--text-main);
+      font-weight: 500;
+    }
+
+    .hero-cta-row {
+      margin-top: 26px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      padding: 11px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.85);
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,0.35), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(168,85,247,0.32), transparent 65%);
+      font-size: 0.86rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-main);
+      box-shadow: var(--shadow-soft);
+      transition: transform var(--transition-med), box-shadow var(--transition-med), border var(--transition-fast), background var(--transition-med);
+    }
+
+    .btn-primary span.icon {
+      font-family: "DM Mono", monospace;
+      font-size: 0.88rem;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px) translateZ(0);
+      border-color: rgba(251,191,36,0.9);
+      box-shadow: 0 30px 80px rgba(15,23,42,0.95);
+      background:
+        radial-gradient(circle at top left, rgba(251,191,36,0.34), transparent 60%),
+        radial-gradient(circle at bottom right, rgba(168,85,247,0.4), transparent 65%);
+    }
+
+    .btn-ghost {
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.55);
+      padding: 9px 16px;
+      font-size: 0.8rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      background: rgba(15,23,42,0.9);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      transition: border var(--transition-fast), color var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+    }
+
+    .btn-ghost span.icon {
+      font-family: "DM Mono", monospace;
+      font-size: 0.86rem;
+    }
+
+    .btn-ghost:hover {
+      border-color: rgba(148,163,184,0.9);
+      color: var(--text-main);
+      background: rgba(15,23,42,0.98);
+      transform: translateY(-1px);
+    }
+
+    .hero-meta {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      font-size: 0.75rem;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-muted);
+    }
+
+    .meta-line {
+      width: 32px;
+      height: 1px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+    }
+
+    /* Hero visual side */
+    .hero-visual {
+      position: relative;
+      min-height: 260px;
+    }
+
+    .chip {
+      position: relative;
+      border-radius: var(--radius-xl);
+      padding: 18px 18px 16px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: radial-gradient(circle at top left, rgba(15,23,42,0.9), rgba(15,23,42,0.93));
+      backdrop-filter: var(--blur-bg);
+      box-shadow: var(--shadow-soft);
+      font-family: "DM Mono", monospace;
+      font-size: 0.8rem;
+      overflow: hidden;
+    }
+
+    .chip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .chip-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+    }
+
+    .chip-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(56,189,248,0.5);
+      background: rgba(15,23,42,0.95);
+      font-size: 0.72rem;
+      color: var(--primary);
+    }
+
+    .chip-status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--primary);
+      box-shadow: 0 0 10px rgba(56,189,248,1);
+      animation: pulse 2.2s infinite ease-out;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      60% { transform: scale(1.8); opacity: 0; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+
+    .chip-body {
+      border-radius: 16px;
+      border: 1px solid rgba(15,23,42,1);
+      background:
+        radial-gradient(circle at 20% 0%, rgba(56,189,248,0.18), transparent 50%),
+        radial-gradient(circle at 80% 100%, rgba(168,85,247,0.18), transparent 55%);
+      padding: 16px 14px;
+    }
+
+    .chip-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .chip-label {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .chip-value {
+      font-size: 0.9rem;
+    }
+
+    .chip-value.highlight {
+      background: linear-gradient(120deg, var(--primary), var(--secondary), var(--accent-gold));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 600;
+    }
+
+    .chip-divider {
+      height: 1px;
+      border-radius: 999px;
+      background: linear-gradient(to right, transparent, rgba(148,163,184,0.7), transparent);
+      margin: 10px 0 8px;
+    }
+
+    .chip-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .chip-tag {
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.45);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: rgba(15,23,42,0.96);
+    }
+
+    .chip-tag span.bracket {
+      color: var(--primary);
+    }
+
+    .chip-secondary {
+      position: absolute;
+      right: -14px;
+      bottom: -18px;
+      width: 60%;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 12px 14px;
+      background: radial-gradient(circle at top, rgba(15,23,42,0.96), rgba(15,23,42,0.9));
+      backdrop-filter: blur(14px);
+      box-shadow: 0 22px 40px rgba(15,23,42,0.9);
+      font-family: "DM Mono", monospace;
+      font-size: 0.74rem;
+    }
+
+    .chip-secondary-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .chip-secondary-rows {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 6px 10px;
+    }
+
+    .chip-secondary-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+    }
+
+    .chip-secondary-value {
+      font-size: 0.8rem;
+    }
+
+    .chip-orbit {
+      position: absolute;
+      inset: -40px;
+      border-radius: 50%;
+      border: 1px dashed rgba(56,189,248,0.25);
+      transform-origin: center;
+      animation: orbit 22s linear infinite;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    @keyframes orbit {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 960px) {
+      .chip-secondary {
+        position: static;
+        width: 100%;
+        margin-top: 18px;
+      }
+      .chip-orbit {
+        display: none;
+      }
+    }
+
+    /* ===== Section dual core ===== */
+    section {
+      margin-top: 56px;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .section-subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      max-width: 40rem;
+    }
+
+    .dual-core {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .dual-core {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .core-card {
+      position: relative;
+      padding: 18px 18px 16px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.55);
+      background: linear-gradient(to bottom right, rgba(15,23,42,0.96), rgba(15,23,42,0.95));
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .core-card::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(56,189,248,0.2), transparent 55%),
+        radial-gradient(circle at 100% 90%, rgba(168,85,247,0.18), transparent 55%);
+      opacity: 0.8;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .core-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .core-tag {
+      font-family: "DM Mono", monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+    }
+
+    .core-title {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .core-subtitle {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .core-body {
+      font-size: 0.86rem;
+      color: #e5e7eb;
+      margin-bottom: 14px;
+    }
+
+    .core-body strong {
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .core-tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .core-tag-pill {
+      font-family: "DM Mono", monospace;
+      font-size: 0.72rem;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.6);
+      background: rgba(15,23,42,0.96);
+      color: var(--text-muted);
+    }
+
+    .core-tag-pill span.bracket {
+      color: var(--primary);
+    }
+
+    .core-meta {
+      margin-top: 10px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .core-visual {
+      margin-top: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 10px 10px 9px;
+      background: radial-gradient(circle at top, rgba(15,23,42,0.95), rgba(15,23,42,0.95));
+      font-family: "DM Mono", monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .core-visual-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .core-visual-line span.value {
+      color: var(--text-main);
+    }
+
+    .core-visual-line span.spark {
+      letter-spacing: -0.08em;
+    }
+
+    /* Differentiated glows */
+    .core-ops::before {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(56,189,248,0.25), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(34,211,238,0.12), transparent 55%);
+    }
+
+    .core-invest::before {
+      background:
+        radial-gradient(circle at 0% 0%, rgba(168,85,247,0.22), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(251,191,36,0.16), transparent 55%);
+    }
+
+    /* ===== Méthodologie ===== */
+    .methodology {
+      margin-top: 56px;
+    }
+
+    .timeline {
+      margin-top: 24px;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.55);
+      background: linear-gradient(to bottom right, rgba(15,23,42,0.96), rgba(15,23,42,0.98));
+      backdrop-filter: blur(18px);
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(56,189,248,0.18), transparent 50%),
+        radial-gradient(circle at 90% 100%, rgba(168,85,247,0.18), transparent 55%);
+      opacity: 0.9;
+      mix-blend-mode: screen;
+    }
+
+    .timeline-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .timeline-track {
+      position: relative;
+      margin-top: 10px;
+      padding-top: 12px;
+    }
+
+    .timeline-line {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent-gold));
+      opacity: 0.7;
+    }
+
+    .timeline-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 18px;
+    }
+
+    @media (max-width: 960px) {
+      .timeline-steps {
+        grid-template-columns: minmax(0,1fr);
+      }
+      .timeline-line {
+        display: none;
+      }
+    }
+
+    .step {
+      position: relative;
+      padding-top: 16px;
+    }
+
+    .step-dot {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      background: radial-gradient(circle at center, #fff 0, var(--primary) 40%, transparent 70%);
+      box-shadow: 0 0 18px rgba(56,189,248,0.9);
+    }
+
+    @media (max-width: 960px) {
+      .step-dot {
+        left: 0;
+        transform: none;
+      }
+    }
+
+    .step-label {
+      font-family: "DM Mono", monospace;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .step-title {
+      font-size: 0.96rem;
+      margin-bottom: 6px;
+    }
+
+    .step-body {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== Contact / Footer ===== */
+    .contact {
+      margin-top: 64px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(148,163,184,0.35);
+    }
+
+    .contact-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: minmax(0,2.4fr) minmax(0,2.6fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .contact-grid {
+        grid-template-columns: minmax(0,1fr);
+      }
+    }
+
+    .contact-card {
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148,163,184,0.6);
+      padding: 18px 18px 16px;
+      background: linear-gradient(to bottom right, rgba(15,23,42,0.96), rgba(15,23,42,0.97));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .contact-label {
+      font-family: "DM Mono", monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 6px;
+    }
+
+    .contact-body {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .contact-terminal {
+      font-family: "DM Mono", monospace;
+      font-size: 0.8rem;
+      background: #020617;
+      border-radius: 14px;
+      padding: 12px 14px;
+      border: 1px solid rgba(55,65,81,0.9);
+      color: #e5e7eb;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-terminal::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 10% 0%, rgba(56,189,248,0.15), transparent 55%);
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .term-line {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 3px;
+    }
+
+    .term-prefix {
+      color: var(--primary);
+    }
+
+    .term-cursor {
+      width: 7px;
+      height: 1px;
+      background: #e5e7eb;
+      animation: blink 1.3s steps(2, start) infinite;
+    }
+
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
+    .contact-list {
+      margin-top: 10px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .contact-list a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    .contact-list a:hover {
+      text-decoration: underline;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 10px;
+      font-size: 0.8rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .field label {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .field input,
+    .field textarea {
+      border-radius: 10px;
+      border: 1px solid rgba(55,65,81,0.9);
+      background: rgba(15,23,42,0.95);
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 0.84rem;
+      color: var(--text-main);
+      outline: none;
+      transition: border var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast);
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: rgba(148,163,184,0.65);
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: rgba(56,189,248,0.9);
+      box-shadow: 0 0 0 1px rgba(56,189,248,0.5);
+      background: rgba(15,23,42,0.98);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 90px;
+    }
+
+    .form-note {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .form-actions {
+      margin-top: 8px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .btn-send {
+      padding: 8px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(168,85,247,0.8);
+      background: radial-gradient(circle at top, rgba(168,85,247,0.25), transparent 60%);
+      font-size: 0.78rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      color: var(--text-main);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border var(--transition-fast), background var(--transition-med);
+    }
+
+    .btn-send span.icon {
+      font-family: "DM Mono", monospace;
+      font-size: 0.86rem;
+    }
+
+    .btn-send:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(15,23,42,0.9);
+      border-color: rgba(251,191,36,0.9);
+      background: radial-gradient(circle at top, rgba(251,191,36,0.3), transparent 60%);
+    }
+
+    footer {
+      margin-top: 26px;
+      padding-top: 14px;
+      padding-bottom: 8px;
+      border-top: 1px solid rgba(31,41,55,0.9);
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer .sig {
+      font-family: "DM Mono", monospace;
+    }
+
+    footer .legal {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    footer .legal a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.74rem;
+    }
+
+    footer .legal a:hover {
+      color: var(--primary);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="bg-orbit"></div>
+  <div class="bg-grid"></div>
+
+  <header>
+    <div class="nav">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true"></div>
+        <div class="brand-text">
+          <div class="brand-title">GUICHAR&nbsp;LPAM</div>
+          <div class="brand-sub">Consulting &amp; Investments</div>
+        </div>
+      </div>
+
+      <nav id="main-nav">
+        <button class="nav-toggle" aria-label="Menu" onclick="toggleNav()">☰</button>
+        <ul>
+          <li><a href="#expertise">Expertise</a></li>
+          <li><a href="#investissement">Investissement</a></li>
+          <li><a href="#methodologie">Méthodologie</a></li>
+          <li><button class="nav-cta" onclick="scrollToContact()">
+            <span>// Contact</span><span class="arrow">↗</span>
+          </button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrapper">
+    <!-- Hero -->
+    <section class="hero" id="top">
+      <div class="hero-inner">
+        <div class="hero-text">
+          <div class="pill">
+            <div class="pill-dot"></div>
+            <span>Interface neurale de la performance</span>
+          </div>
+
+          <h1 class="hero-title">
+            AUDIT. <span class="highlight">ARCHITECT.</span> AMPLIFY.
+          </h1>
+
+          <p class="hero-subtitle">
+            <strong>Sparring partner stratégique pour le dirigeant.</strong>
+            Architecte de votre performance financière pérenne sur trois
+            grandes classes d’actifs. Une approche pensée comme un
+            <em>système d’exploitation</em> pour votre entreprise et votre patrimoine.
+          </p>
+
+          <div class="hero-cta-row">
+            <button class="btn-primary" onclick="scrollToContact()">
+              <span>Initialiser la séquence stratégique</span>
+              <span class="icon">▶</span>
+            </button>
+
+            <button class="btn-ghost" onclick="document.querySelector('#methodologie').scrollIntoView({behavior:'smooth'})">
+              <span class="icon">/*</span>
+              <span>Voir l’algorithme</span>
+            </button>
+          </div>
+
+          <div class="hero-meta">
+            <div class="hero-meta-item">
+              <div class="meta-line"></div>
+              <span>Optimisation Opérationnelle &amp; Accompagnement CEO</span>
+            </div>
+            <div class="hero-meta-item">
+              <div class="meta-line"></div>
+              <span>Listed, Private &amp; Alternative Markets</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+          <div class="chip">
+            <div class="chip-header">
+              <div class="chip-title">System Status // GUICHAR&nbsp;LPAM</div>
+              <div class="chip-status">
+                <span class="chip-status-dot"></span>
+                <span>LIVE&nbsp;MODE</span>
+              </div>
+            </div>
+            <div class="chip-body">
+              <div class="chip-row">
+                <div class="chip-label">Operational Core</div>
+                <div class="chip-value highlight">Sparring&nbsp;Partner&nbsp;CEO</div>
+              </div>
+              <div class="chip-row">
+                <div class="chip-label">Investment Matrix</div>
+                <div class="chip-value">Listed / Private / Alternative</div>
+              </div>
+              <div class="chip-divider"></div>
+              <div class="chip-row">
+                <div class="chip-label">Objective</div>
+                <div class="chip-value">Stable &amp; Risk-controlled Performance</div>
+              </div>
+              <div class="chip-tags">
+                <div class="chip-tag"><span class="bracket">&lt;</span>Pragmatisme Radical<span class="bracket">&gt;</span></div>
+                <div class="chip-tag"><span class="bracket">&lt;</span>Architecture Business<span class="bracket">&gt;</span></div>
+                <div class="chip-tag"><span class="bracket">&lt;</span>Performance Pérenne<span class="bracket">&gt;</span></div>
+                <div class="chip-tag"><span class="bracket">&lt;</span>Contrôle du Risque<span class="bracket">&gt;</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chip-secondary">
+            <div class="chip-secondary-title">// Real-time Signal</div>
+            <div class="chip-secondary-rows">
+              <div>
+                <div class="chip-secondary-label">Ops Latency</div>
+                <div class="chip-secondary-value">↓ Frictions</div>
+              </div>
+              <div>
+                <div class="chip-secondary-label">Risk Shield</div>
+                <div class="chip-secondary-value">ON / 24·7</div>
+              </div>
+              <div>
+                <div class="chip-secondary-label">Signal / Noise</div>
+                <div class="chip-secondary-value">&gt;&gt; 1.0</div>
+              </div>
+              <div>
+                <div class="chip-secondary-label">Decision Speed</div>
+                <div class="chip-secondary-value">Boosted</div>
+              </div>
+              <div>
+                <div class="chip-secondary-label">Asset Coverage</div>
+                <div class="chip-secondary-value">3&nbsp;Cores</div>
+              </div>
+              <div>
+                <div class="chip-secondary-label">Owner</div>
+                <div class="chip-secondary-value">You</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chip-orbit"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dual core section -->
+    <section id="expertise">
+      <div class="section-label">// Dual Core</div>
+      <h2 class="section-title">Deux moteurs synchronisés pour la performance.</h2>
+      <p class="section-subtitle">
+        Un même ADN, deux terrains de jeu complémentaires&nbsp;:
+        <strong>architecture opérationnelle</strong> au cœur de l’entreprise,
+        et <strong>allocation multi-actifs</strong> pensée pour tenir dans le temps.
+      </p>
+
+      <div class="dual-core">
+        <!-- Optimisation opérationnelle -->
+        <article class="core-card core-ops">
+          <div class="core-card-inner">
+            <div class="core-tag">// 01. L’EXOSQUELETTE OPÉRATIONNEL</div>
+            <h3 class="core-title">Optimisation Opérationnelle &amp; Accompagnement CEO</h3>
+            <p class="core-subtitle">Sparring partner stratégique &amp; architecte opérationnel.</p>
+            <p class="core-body">
+              Nous ne produisons pas de slides qui restent dans un dossier.
+              Nous injectons du <strong>code pragmatique</strong> dans votre organisation&nbsp;:
+              routines, décisions, priorités. Intervention directe aux côtés du dirigeant
+              pour transformer les frictions en <strong>vélocité mesurable</strong>.
+            </p>
+            <div class="core-tags-row">
+              <div class="core-tag-pill"><span class="bracket">&lt;</span>Pragmatisme Radical<span class="bracket">&gt;</span></div>
+              <div class="core-tag-pill"><span class="bracket">&lt;</span>Mesure d’Impact<span class="bracket">&gt;</span></div>
+              <div class="core-tag-pill"><span class="bracket">&lt;</span>Architecture Business<span class="bracket">&gt;</span></div>
+            </div>
+            <div class="core-meta">
+              <span>Mode : Hands-on &amp; co-pilotage</span>
+              <span>Pour CEO qui veulent du concret, pas du bruit.</span>
+            </div>
+            <div class="core-visual">
+              <div class="core-visual-line">
+                <span>&gt; Ops Throughput</span>
+                <span class="value">++</span>
+              </div>
+              <div class="core-visual-line">
+                <span>&gt; Decision Latency</span>
+                <span class="value">--</span>
+              </div>
+              <div class="core-visual-line">
+                <span>&gt; Strategic Focus</span>
+                <span class="spark">▁▂▃▅▆▇█</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Activité d'investissement -->
+        <article class="core-card core-invest" id="investissement">
+          <div class="core-card-inner">
+            <div class="core-tag">// 02. LA MATRICE D’INVESTISSEMENT</div>
+            <h3 class="core-title">Activité d’Investissement</h3>
+            <p class="core-subtitle">Listed, Private &amp; Alternative Markets.</p>
+            <p class="core-body">
+              Analyse croisée <strong>algorithmique &amp; humaine</strong> sur trois grandes
+              classes d’actifs. L’objectif n’est pas la spéculation, mais la construction
+              d’une <strong>performance stable, pérenne et sous contrôle du risque</strong>,
+              pour une clientèle exigeante sur la robustesse.
+            </p>
+            <div class="core-tags-row">
+              <div class="core-tag-pill"><span class="bracket">&lt;</span>Performance Pérenne<span class="bracket">&gt;</span></div>
+              <div class="core-tag-pill"><span class="bracket">&lt;</span>Contrôle du Risque<span class="bracket">&gt;</span></div>
+              <div class="core-tag-pill"><span class="bracket">&lt;</span>Multi-Asset Class<span class="bracket">&gt;</span></div>
+            </div>
+            <div class="core-meta">
+              <span>Scope : Actions, Private Markets, Alternatifs.</span>
+              <span>Cadre : Discipline, transparence, alignement.</span>
+            </div>
+            <div class="core-visual">
+              <div class="core-visual-line">
+                <span>&gt; Volatility Filter</span>
+                <span class="value">ACTIVE</span>
+              </div>
+              <div class="core-visual-line">
+                <span>&gt; Risk Budget</span>
+                <span class="value">STRICT</span>
+              </div>
+              <div class="core-visual-line">
+                <span>&gt; Long-term Signal</span>
+                <span class="spark">╭─╮╰╮╭╯╰─╯</span>
+              </div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Méthodologie -->
+    <section class="methodology" id="methodologie">
+      <div class="section-label">// Notre Algorithme</div>
+      <h2 class="section-title">Une méthode pensée comme un circuit imprimé.</h2>
+      <p class="section-subtitle">
+        Trois étapes, toujours les mêmes, appliquées à des contextes différents&nbsp;:
+        entreprise, structure opérationnelle, portefeuille d’actifs. Tout est conçu
+        pour être <strong>observable, mesurable, itérable</strong>.
+      </p>
+
+      <div class="timeline">
+        <div class="timeline-inner">
+          <div class="timeline-track">
+            <div class="timeline-line"></div>
+            <div class="timeline-steps">
+              <div class="step">
+                <div class="step-dot"></div>
+                <div class="step-label">01. Scan &amp; Diagnostic</div>
+                <div class="step-title">Scanner le système</div>
+                <p class="step-body">
+                  Analyse profonde des données existantes. Cartographie des goulots
+                  d’étranglement opérationnels, des zones de friction ou des
+                  inefficacités patrimoniales. On commence par observer, pas par
+                  projeter.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-dot"></div>
+                <div class="step-label">02. Architecture &amp; Déploiement</div>
+                <div class="step-title">Reconfigurer &amp; exécuter</div>
+                <p class="step-body">
+                  Conception d’une architecture sur mesure. Côté entreprise :
+                  rituels, process, décisions. Côté investissements :
+                  allocation, timing, contraintes de risque. Déploiement en
+                  mode <em>co-pilotage</em> avec le dirigeant.
+                </p>
+              </div>
+
+              <div class="step">
+                <div class="step-dot"></div>
+                <div class="step-label">03. Monitoring &amp; Iteration</div>
+                <div class="step-title">Mesurer &amp; amplifier</div>
+                <p class="step-body">
+                  Suivi serré des KPIs définis ensemble. Ajustements continus
+                  pour stabiliser la performance ou amplifier les résultats.
+                  Rien n’est figé, tout est versionné comme un logiciel.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact / Footer -->
+    <section class="contact" id="contact">
+      <h2 class="section-title">Ready to upgrade your system&nbsp;?</h2>
+      <p class="section-subtitle">
+        Un échange direct, sans filtre ni jargon. Quelques signaux sur votre
+        situation actuelle, vos enjeux, vos contraintes. À partir de là,
+        on voit si une séquence stratégique a du sens.
+      </p>
+
+      <div class="contact-grid">
+        <div class="contact-card">
+          <div class="contact-label">/ Channel</div>
+          <p class="contact-body">
+            Votre premier message peut être extrêmement simple&nbsp;:
+            quelques lignes pour décrire votre entreprise, votre situation
+            patrimoniale, et ce qui vous empêche de dormir la nuit en ce moment.
+          </p>
+          <div class="contact-terminal">
+            <div class="term-line">
+              <span class="term-prefix">&gt;</span>
+              <span>send_signal_to_hq</span>
+              <span>(</span><span>"optimisation_ops",</span><span>"investissements_multi_actifs"</span><span>);</span>
+            </div>
+            <div class="term-line">
+              <span class="term-prefix">&gt;</span>
+              <span>// réponse humaine, pas un bot</span>
+            </div>
+            <div class="term-line">
+              <span class="term-prefix">&gt;</span>
+              <span class="term-cursor"></span>
+            </div>
+          </div>
+          <div class="contact-list">
+            <div>Mail&nbsp;: <a href="mailto:contact@guichar.com">contact@guichar.com</a></div>
+            <!-- Tu peux adapter avec tes coordonnées réelles -->
+          </div>
+        </div>
+
+        <div class="contact-card">
+          <div class="contact-label">/ Initialiser une prise de contact</div>
+          <!-- Formulaire statique : à connecter à Formspree / backend ensuite -->
+          <form class="contact-form">
+            <div class="field">
+              <label for="name">Nom &amp; Rôle</label>
+              <input id="name" type="text" placeholder="Ex. CEO, Fondateur, Family Office..." />
+            </div>
+            <div class="field">
+              <label for="company">Entreprise / Structure</label>
+              <input id="company" type="text" placeholder="Nom de votre entreprise ou structure" />
+            </div>
+            <div class="field">
+              <label for="focus">Enjeu prioritaire</label>
+              <input id="focus" type="text" placeholder="Optimisation opérationnelle, allocation d’actifs, autre..." />
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" placeholder="Décrivez en quelques lignes votre contexte actuel et ce que vous attendez d’un sparring partner / architecte de performance."></textarea>
+            </div>
+            <div class="form-note">
+              Ce formulaire est volontairement minimaliste. Aucune newsletter, aucun spam,
+              uniquement un premier contact qualifié.
+            </div>
+            <div class="form-actions">
+              <button type="button" class="btn-send">
+                <span>Envoyer le signal</span>
+                <span class="icon">↗</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <footer>
+        <div class="sig">
+          GUICHAR LPAM — <span style="letter-spacing:0.18em;text-transform:uppercase;">Ultima Arx, Consilium Sapientis</span>
+        </div>
+        <div class="legal">
+          <span>© <span id="year"></span> GUICHAR LPAM</span>
+          <span>•</span>
+          <a href="#">Mentions légales</a>
+          <span>•</span>
+          <a href="#">Politique de confidentialité</a>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <script>
+    // mobile nav toggle
+    function toggleNav() {
+      const nav = document.getElementById('main-nav');
+      nav.classList.toggle('open');
+    }
+
+    // scroll to contact
+    function scrollToContact() {
+      const el = document.getElementById('contact');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // dynamic year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
