@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap" rel="stylesheet">
 
-  <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-LYgXv8iO9+y1QbiU8k0D4J9VK9d2P4M6gV2jxxhE2Gz2B6O4Y2P5GfL1O3QrhYt9Vmbq0W4iT9N7t6Hf5xU6bQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- GSAP (sans intégrité pour éviter les blocages) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <style>
     :root {
@@ -57,18 +57,6 @@
       pointer-events: none;
     }
 
-    /* Légère parallax-like pour le background */
-    .background-inner {
-      width: 110%;
-      height: 110%;
-      position: absolute;
-      top: -5%;
-      left: -5%;
-      background-image: inherit;
-      background-size: inherit;
-      background-position: inherit;
-    }
-
     /* --- MAIN CONTAINER --- */
     .page {
       position: relative;
@@ -96,41 +84,6 @@
         0 0 80px rgba(106, 15, 73, 0.6);
       cursor: pointer;
       overflow: hidden;
-    }
-
-    .logo-wrapper::before {
-      content: "";
-      position: absolute;
-      inset: -2px;
-      border-radius: inherit;
-      background: radial-gradient(circle at top, rgba(255,255,255,0.35), transparent 45%);
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .logo-wrapper::after {
-      /* légère lueur violette tournante */
-      content: "";
-      position: absolute;
-      width: 220%;
-      height: 220%;
-      background: conic-gradient(
-        from 180deg,
-        transparent 0deg,
-        rgba(106, 15, 73, 0.6) 80deg,
-        transparent 140deg,
-        rgba(140, 70, 180, 0.5) 200deg,
-        transparent 260deg,
-        rgba(8, 180, 220, 0.4) 320deg,
-        transparent 360deg
-      );
-      top: -60%;
-      left: -60%;
-      opacity: 0.18;
-      mix-blend-mode: screen;
-      filter: blur(28px);
-      transform-origin: center;
-      z-index: -1;
     }
 
     .logo-img {
@@ -175,7 +128,7 @@
       z-index: -1;
     }
 
-    /* Responsive léger */
+    /* Responsive */
     @media (max-width: 600px) {
       .logo-wrapper {
         padding: 1.8rem 1.9rem;
@@ -202,15 +155,14 @@
 <body>
 
   <!-- BACKGROUND -->
-  <div class="background">
-    <div class="background-inner"></div>
-  </div>
+  <div class="background"></div>
   <div class="background-overlay"></div>
 
   <!-- CONTENT -->
   <div class="page">
     <div class="logo-wrapper" id="logoWrapper">
       <div class="logo-glow" id="logoGlow"></div>
+      <!-- 🔴 Chemin corrigé -->
       <img src="img/logo_purple.png" alt="GUICHAR LPAM" class="logo-img" id="logoImg" />
       <div class="tagline">Consulting & Investments</div>
       <div class="subtitle">Strategic sparring partner & multi-asset investment office</div>
@@ -219,132 +171,126 @@
   </div>
 
   <script>
-    // Timeline d'arrivée
-    const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+    // Vérification rapide que GSAP est bien chargé
+    if (typeof gsap === "undefined") {
+      console.error("GSAP n'est pas chargé. Vérifie bien la balise <script> du CDN.");
+    } else {
+      // Timeline d'arrivée
+      const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    tl.from(".background-inner", {
-      scale: 1.1,
-      duration: 1.8,
-      opacity: 0.5
-    })
-    .from("#logoWrapper", {
-      duration: 1.2,
-      opacity: 0,
-      y: 40,
-      scale: 0.9
-    }, "-=1.0")
-    .from("#logoImg", {
-      duration: 1.0,
-      scale: 0.7,
-      opacity: 0,
-      filter: "blur(12px)"
-    }, "-=0.7")
-    .from(".tagline, .subtitle, .hint", {
-      duration: 0.8,
-      opacity: 0,
-      y: 18,
-      stagger: 0.12
-    }, "-=0.4")
-    .to(".logo-wrapper::before", {
-      // GSAP ne peut pas animer directement ::before, on animera la classe via wrapper
-    });
-
-    // "Breathing" animation sur le logo
-    gsap.to("#logoImg", {
-      scale: 1.03,
-      duration: 2.2,
-      yoyo: true,
-      repeat: -1,
-      ease: "sine.inOut"
-    });
-
-    // légère pulsation de la lueur
-    gsap.to("#logoGlow", {
-      scale: 1.15,
-      opacity: 1,
-      duration: 3,
-      yoyo: true,
-      repeat: -1,
-      ease: "sine.inOut"
-    });
-
-    // Rotation lente de la lueur conique derrière (pseudo via rotation du wrapper)
-    gsap.to(".logo-wrapper::after", {
-      // Ce n'est pas supporté, donc on simule en tournant tout le wrapper via box-shadow
-      // On va plutôt faire un petit effet de tilt sur le wrapper :
-    });
-
-    // Parallax léger sur la souris
-    const page = document.querySelector(".page");
-    const backgroundInner = document.querySelector(".background-inner");
-
-    page.addEventListener("mousemove", (e) => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 12;
-      const y = (e.clientY / window.innerHeight - 0.5) * 12;
-
-      gsap.to(backgroundInner, {
-        duration: 0.6,
-        x: x,
-        y: y,
-        ease: "power2.out"
-      });
-
-      gsap.to("#logoWrapper", {
-        duration: 0.5,
-        x: x * 0.3,
-        y: y * 0.3,
-        ease: "power2.out"
-      });
-    });
-
-    // Effet hover léger sur le logo-wrapper
-    const logoWrapper = document.getElementById("logoWrapper");
-
-    logoWrapper.addEventListener("mouseenter", () => {
-      gsap.to(logoWrapper, {
-        duration: 0.4,
-        scale: 1.02,
-        boxShadow: "0 0 50px rgba(106, 15, 73, 0.85)"
-      });
-    });
-
-    logoWrapper.addEventListener("mouseleave", () => {
-      gsap.to(logoWrapper, {
-        duration: 0.4,
-        scale: 1.0,
-        boxShadow: "0 0 40px rgba(0, 0, 0, 0.7), 0 0 80px rgba(106, 15, 73, 0.6)"
-      });
-    });
-
-    // Clic pour entrer sur le site
-    logoWrapper.addEventListener("click", () => {
-      // petite animation avant redirection
-      const clickTl = gsap.timeline({
-        defaults: { ease: "power3.inOut" },
-        onComplete: () => {
-          // 🔁 À ADAPTER : URL de ton site principal
-          window.location.href = "index.html";
-        }
-      });
-
-      clickTl.to("#logoWrapper", {
-        duration: 0.5,
-        scale: 1.06,
-        opacity: 1,
-        boxShadow: "0 0 80px rgba(255,255,255,0.9)"
+      tl.from(".background", {
+        scale: 1.1,
+        duration: 1.5,
+        opacity: 0.4
       })
-      .to("#logoWrapper", {
-        duration: 0.55,
-        scale: 0.75,
+      .from("#logoWrapper", {
+        duration: 1.0,
         opacity: 0,
-        y: -80
-      }, "-=0.1")
-      .to(".background-inner", {
-        duration: 0.6,
-        scale: 1.2,
-        opacity: 0.35
+        y: 40,
+        scale: 0.9
+      }, "-=1.0")
+      .from("#logoImg", {
+        duration: 0.9,
+        scale: 0.7,
+        opacity: 0,
+        filter: "blur(12px)"
+      }, "-=0.6")
+      .from(".tagline, .subtitle, .hint", {
+        duration: 0.7,
+        opacity: 0,
+        y: 18,
+        stagger: 0.12
       }, "-=0.4");
-    });
+
+      // "Breathing" animation sur le logo
+      gsap.to("#logoImg", {
+        scale: 1.03,
+        duration: 2.2,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut"
+      });
+
+      // légère pulsation de la lueur
+      gsap.to("#logoGlow", {
+        scale: 1.15,
+        opacity: 1,
+        duration: 3,
+        yoyo: true,
+        repeat: -1,
+        ease: "sine.inOut"
+      });
+
+      // Parallax léger sur la souris
+      const page = document.querySelector(".page");
+      const background = document.querySelector(".background");
+      const logoWrapper = document.getElementById("logoWrapper");
+
+      page.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 12;
+        const y = (e.clientY / window.innerHeight - 0.5) * 12;
+
+        gsap.to(background, {
+          duration: 0.6,
+          x: x,
+          y: y,
+          ease: "power2.out"
+        });
+
+        gsap.to(logoWrapper, {
+          duration: 0.5,
+          x: x * 0.3,
+          y: y * 0.3,
+          ease: "power2.out"
+        });
+      });
+
+      // Effet hover léger sur le logo-wrapper
+      logoWrapper.addEventListener("mouseenter", () => {
+        gsap.to(logoWrapper, {
+          duration: 0.4,
+          scale: 1.02,
+          boxShadow: "0 0 50px rgba(106, 15, 73, 0.85)"
+        });
+      });
+
+      logoWrapper.addEventListener("mouseleave", () => {
+        gsap.to(logoWrapper, {
+          duration: 0.4,
+          scale: 1.0,
+          boxShadow: "0 0 40px rgba(0, 0, 0, 0.7), 0 0 80px rgba(106, 15, 73, 0.6)"
+        });
+      });
+
+      // Clic pour entrer sur le site
+      logoWrapper.addEventListener("click", () => {
+        const clickTl = gsap.timeline({
+          defaults: { ease: "power3.inOut" },
+          onComplete: () => {
+            // 🔁 À ADAPTER : URL de ton site principal
+            window.location.href = "index.html";
+          }
+        });
+
+        clickTl.to("#logoWrapper", {
+          duration: 0.5,
+          scale: 1.06,
+          opacity: 1,
+          boxShadow: "0 0 80px rgba(255,255,255,0.9)"
+        })
+        .to("#logoWrapper", {
+          duration: 0.55,
+          scale: 0.75,
+          opacity: 0,
+          y: -80
+        }, "-=0.1")
+        .to(".background", {
+          duration: 0.6,
+          scale: 1.2,
+          opacity: 0.35
+        }, "-=0.4");
+      });
+    }
   </script>
 </body>
 </html>
